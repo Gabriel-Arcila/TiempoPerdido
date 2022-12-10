@@ -1,0 +1,26 @@
+﻿@inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthStateProvider
+
+
+<AuthorizeView>
+    <Authorized>
+            <BSButton   class="buttonFormularioDLT"  Size="Size.ExtraSmall" OnClick="Logout">  Cerrar Sesión <span class="oi oi-out"></span></BSButton>
+    </Authorized>
+    <NotAuthorized>
+            <BSButton   class="buttonFormularioOK"  Size="Size.ExtraSmall" OnClick="Login">  Iniciar Sesión <span class="oi oi-in"></span></BSButton>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+    void Login()
+    {
+        NavigationManager.NavigateTo("login");
+    }
+    async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("TiempoPerdido");
+        await AuthStateProvider.GetAuthenticationStateAsync();
+    }
+}
