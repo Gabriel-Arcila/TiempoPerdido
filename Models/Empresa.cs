@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TiempoPerdido.Models;
-
-public partial class Empresa
+namespace TiempoPerdido.Models
 {
-    public int IdEmpresa { get; set; }
+    public partial class Empresa
+    {
+        public Empresa()
+        {
+            Centros = new HashSet<Centro>();
+        }
 
-    public int IdPais { get; set; }
+        public int IdEmpresa { get; set; }
+        public int IdPais { get; set; }
+        public string Enombre { get; set; } = null!;
+        public string? Edescri { get; set; }
+        public bool Eestado { get; set; }
 
-    public string Enombre { get; set; } = null!;
-
-    public string? Edescri { get; set; }
-
-    public bool Eestado { get; set; }
-
-    public virtual ICollection<Centro> Centros { get; } = new List<Centro>();
-
-    public virtual Pai IdPaisNavigation { get; set; } = null!;
+        public virtual Pai IdPaisNavigation { get; set; } = null!;
+        public virtual ICollection<Centro> Centros { get; set; }
+    }
 }

@@ -1,32 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TiempoPerdido.Models;
-
-/// <summary>
-/// Area solicitante
-/// </summary>
-public partial class ClienteP
+namespace TiempoPerdido.Models
 {
     /// <summary>
-    /// Identificador del cliente del proyecto
+    /// Area solicitante
     /// </summary>
-    public int IdClienteP { get; set; }
+    public partial class ClienteP
+    {
+        public ClienteP()
+        {
+            Proyectos = new HashSet<Proyecto>();
+        }
 
-    /// <summary>
-    /// nombre del area
-    /// </summary>
-    public string Cpnombre { get; set; } = null!;
+        /// <summary>
+        /// Identificador del cliente del proyecto
+        /// </summary>
+        public int IdClienteP { get; set; }
+        /// <summary>
+        /// nombre del area
+        /// </summary>
+        public string Cpnombre { get; set; } = null!;
+        /// <summary>
+        /// decripcion del area
+        /// </summary>
+        public string? Cpdescri { get; set; }
+        /// <summary>
+        /// estatus(0:inactivo,1:activo)
+        /// </summary>
+        public bool Cpestatus { get; set; }
 
-    /// <summary>
-    /// decripcion del area
-    /// </summary>
-    public string? Cpdescri { get; set; }
-
-    /// <summary>
-    /// estatus(0:inactivo,1:activo)
-    /// </summary>
-    public bool Cpestatus { get; set; }
-
-    public virtual ICollection<Proyecto> Proyectos { get; } = new List<Proyecto>();
+        public virtual ICollection<Proyecto> Proyectos { get; set; }
+    }
 }

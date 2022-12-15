@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TiempoPerdido.Models;
-
-public partial class ClasifiTpm
+namespace TiempoPerdido.Models
 {
-    public int IdCtpm { get; set; }
+    public partial class ClasifiTpm
+    {
+        public ClasifiTpm()
+        {
+            LibroNoves = new HashSet<LibroNove>();
+        }
 
-    public string Ctpmnom { get; set; } = null!;
+        public int IdCtpm { get; set; }
+        public string Ctpmnom { get; set; } = null!;
+        public bool Ctpmestado { get; set; }
 
-    public bool Ctpmestado { get; set; }
-
-    public virtual ICollection<LibroNove> LibroNoves { get; } = new List<LibroNove>();
+        public virtual ICollection<LibroNove> LibroNoves { get; set; }
+    }
 }

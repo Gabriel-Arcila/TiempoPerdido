@@ -5,32 +5,58 @@
 
 #cajaPadre {
     width: 100%;
-    height: 100vh;
+    height: 70vh;
     /* background-color: brown; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#cajalogo {
+    width: 50%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items:flex-start;
+    /* background-color:aqua; */
+}
+
+.cajaContenido{
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-#cajaContenido {
-    width: 50%;
-    height: 100vh;
-    /* background-color:aqua; */
-}
-
-#cajaImg {
-    width: 50%;
-    height: 70vh;
-    color: rgba(63, 47, 47, 0.979);
-    /* background-color:aquamarine; */
-}
-
-#cajaLogo {
-    height: 10%;
+#link_on{
+    width: 100%;
+    height: 100%;
+    padding: 20%;
     display: flex;
-    justify-content: flex-start;
-    margin: 10px;
+    flex-wrap:wrap;
+    justify-content: center;
+    align-items:flex-start;
+    outline: invert;
+    text-decoration: none;
 }
+#link_on:hover{
+    text-decoration:underline rgb(0, 120, 60);
+}
+
+#ontext{
+    font-size: 1.5em;
+    width: 100%;
+    text-align: center;
+    color: black;
+}
+
+
+
+
+
+
+
 
 #Layer_1 {
     height: 100%;

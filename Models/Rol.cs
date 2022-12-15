@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TiempoPerdido.Models;
-
-public partial class Rol
+namespace TiempoPerdido.Models
 {
-    public int IdRol { get; set; }
+    public partial class Rol
+    {
+        public Rol()
+        {
+            Nivels = new HashSet<Nivel>();
+        }
 
-    public string Rnombre { get; set; } = null!;
+        public int IdRol { get; set; }
+        public string Rnombre { get; set; } = null!;
+        public bool Restado { get; set; }
+        public string? Rdescri { get; set; }
 
-    public bool Restado { get; set; }
-
-    public string? Rdescri { get; set; }
-
-    public virtual ICollection<Nivel> Nivels { get; } = new List<Nivel>();
+        public virtual ICollection<Nivel> Nivels { get; set; }
+    }
 }

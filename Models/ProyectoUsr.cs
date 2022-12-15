@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TiempoPerdido.Models;
-
-public partial class ProyectoUsr
+namespace TiempoPerdido.Models
 {
-    public int IdProyecto { get; set; }
+    public partial class ProyectoUsr
+    {
+        public ProyectoUsr()
+        {
+            Nivels = new HashSet<Nivel>();
+        }
 
-    public string Pnombre { get; set; } = null!;
+        public int IdProyecto { get; set; }
+        public string Pnombre { get; set; } = null!;
+        public bool Pestado { get; set; }
 
-    public bool Pestado { get; set; }
-
-    public virtual ICollection<Nivel> Nivels { get; } = new List<Nivel>();
+        public virtual ICollection<Nivel> Nivels { get; set; }
+    }
 }

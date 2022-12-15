@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TiempoPerdido.Models;
-
-public partial class Puesto
+namespace TiempoPerdido.Models
 {
-    public int IdPuesto { get; set; }
+    public partial class Puesto
+    {
+        public Puesto()
+        {
+            Personals = new HashSet<Personal>();
+        }
 
-    public string? PuCodigo { get; set; }
+        public int IdPuesto { get; set; }
+        public string? PuCodigo { get; set; }
+        public string? PuDescri { get; set; }
+        public bool? PuEstado { get; set; }
 
-    public string? PuDescri { get; set; }
-
-    public bool? PuEstado { get; set; }
-
-    public virtual ICollection<Personal> Personals { get; } = new List<Personal>();
+        public virtual ICollection<Personal> Personals { get; set; }
+    }
 }

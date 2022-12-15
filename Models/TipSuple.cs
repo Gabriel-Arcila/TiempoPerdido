@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TiempoPerdido.Models;
-
-public partial class TipSuple
+namespace TiempoPerdido.Models
 {
-    public int IdTipSuple { get; set; }
+    public partial class TipSuple
+    {
+        public TipSuple()
+        {
+            Resumen = new HashSet<Resuman>();
+        }
 
-    public string? Tscodigo { get; set; }
+        public int IdTipSuple { get; set; }
+        public string? Tscodigo { get; set; }
+        public string? Tsdescri { get; set; }
+        public bool? Tsestado { get; set; }
 
-    public string? Tsdescri { get; set; }
-
-    public bool? Tsestado { get; set; }
-
-    public virtual ICollection<Resuman> Resumen { get; } = new List<Resuman>();
+        public virtual ICollection<Resuman> Resumen { get; set; }
+    }
 }

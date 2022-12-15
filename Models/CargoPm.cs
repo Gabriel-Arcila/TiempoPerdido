@@ -1,22 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TiempoPerdido.Models;
-
-/// <summary>
-/// cargos registrados en las reuniones de las paradas por mantenimiento
-/// </summary>
-public partial class CargoPm
+namespace TiempoPerdido.Models
 {
     /// <summary>
-    /// identificador
+    /// cargos registrados en las reuniones de las paradas por mantenimiento
     /// </summary>
-    public int IdCargoPm { get; set; }
+    public partial class CargoPm
+    {
+        public CargoPm()
+        {
+            AsisPms = new HashSet<AsisPm>();
+        }
 
-    /// <summary>
-    /// cargo del asistidor
-    /// </summary>
-    public string? Cpmnom { get; set; }
+        /// <summary>
+        /// identificador
+        /// </summary>
+        public int IdCargoPm { get; set; }
+        /// <summary>
+        /// cargo del asistidor
+        /// </summary>
+        public string? Cpmnom { get; set; }
 
-    public virtual ICollection<AsisPm> AsisPms { get; } = new List<AsisPm>();
+        public virtual ICollection<AsisPm> AsisPms { get; set; }
+    }
 }
