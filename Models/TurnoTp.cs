@@ -33,7 +33,7 @@ namespace TiempoPerdido.Models
         /// <summary>
         /// fecha del turno
         /// </summary>
-        public DateTime? Tfecha { get; set; }
+        public DateTime Tfecha { get; set; }
         /// <summary>
         /// tiempo trabajo del turno
         /// </summary>

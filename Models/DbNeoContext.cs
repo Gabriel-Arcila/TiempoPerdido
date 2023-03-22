@@ -76,8 +76,8 @@ namespace TiempoPerdido.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=KAILO\\MSSQLSERVER2;Database=DbNeo;TrustServerCertificate=True;Persist Security Info=True;User ID=sa;Password=12345");
-                //optionsBuilder.UseSqlServer("Server=AZTDTDB03\\DESARROLLO;Database=DbNeo;TrustServerCertificate=True;Persist Security Info=True;User ID=UsrEncuesta;Password=Enc2022**Ing");
+                //optionsBuilder.UseSqlServer("Server=KAILO\\MSSQLSERVER2;Database=DbNeo;TrustServerCertificate=True;Persist Security Info=True;User ID=sa;Password=12345");
+                optionsBuilder.UseSqlServer("Server=AZTDTDB03\\DESARROLLO;Database=DbNeo;TrustServerCertificate=True;Persist Security Info=True;User ID=UsrEncuesta;Password=Enc2022**Ing");
             }
         }
 

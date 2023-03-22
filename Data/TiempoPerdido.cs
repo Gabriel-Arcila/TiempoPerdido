@@ -66,7 +66,7 @@ namespace  TiempoPerdido.Data
                 turno = "2";
                 fechaActual = DateTime.Now.AddDays(-1);
             }
-            return await this._cotext.TurnoTps.Where(t => /*(t.Tfecha.Date == fechaActual.Date) &&*/ (t.Tturno == turno) && (t.IdLinea == idLinea) ).FirstOrDefaultAsync();
+            return await this._cotext.TurnoTps.Where(t => (t.Tfecha.Date == fechaActual.Date) && (t.Tturno == turno) && (t.IdLinea == idLinea) ).FirstOrDefaultAsync();
         }
          public async Task<bool> ActulizarTurno(TurnoTp turno)
         {
