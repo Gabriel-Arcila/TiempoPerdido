@@ -1,50 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TiempoPerdido.Models
+namespace TiempoPerdido.Models;
+
+/// <summary>
+/// linea de produccion
+/// </summary>
+public partial class Linea
 {
     /// <summary>
-    /// linea de produccion
+    /// identificador de la linea
     /// </summary>
-    public partial class Linea
-    {
-        public Linea()
-        {
-            LibroNoves = new HashSet<LibroNove>();
-            LinAres = new HashSet<LinAre>();
-            LinPros = new HashSet<LinPro>();
-            TurnoTps = new HashSet<TurnoTp>();
-        }
+    public int IdLinea { get; set; }
 
-        /// <summary>
-        /// identificador de la linea
-        /// </summary>
-        public int IdLinea { get; set; }
-        /// <summary>
-        /// identificador del centro
-        /// </summary>
-        public int IdCentro { get; set; }
-        public int? IdDivision { get; set; }
-        /// <summary>
-        /// nombre de la linea
-        /// </summary>
-        public string Lnom { get; set; } = null!;
-        /// <summary>
-        /// Detalle de la linea
-        /// </summary>
-        public string? Ldetalle { get; set; }
-        /// <summary>
-        /// 0: Inactivo, 1:Activo
-        /// </summary>
-        public bool Lestado { get; set; }
-        public string? LcenCos { get; set; }
-        public string? Lofic { get; set; }
+    /// <summary>
+    /// identificador del centro
+    /// </summary>
+    public int IdCentro { get; set; }
 
-        public virtual Centro IdCentroNavigation { get; set; } = null!;
-        public virtual Division? IdDivisionNavigation { get; set; }
-        public virtual ICollection<LibroNove> LibroNoves { get; set; }
-        public virtual ICollection<LinAre> LinAres { get; set; }
-        public virtual ICollection<LinPro> LinPros { get; set; }
-        public virtual ICollection<TurnoTp> TurnoTps { get; set; }
-    }
+    public int? IdDivision { get; set; }
+
+    /// <summary>
+    /// nombre de la linea
+    /// </summary>
+    public string Lnom { get; set; } = null!;
+
+    /// <summary>
+    /// Detalle de la linea
+    /// </summary>
+    public string? Ldetalle { get; set; }
+
+    /// <summary>
+    /// 0: Inactivo, 1:Activo
+    /// </summary>
+    public bool Lestado { get; set; }
+
+    public string? LcenCos { get; set; }
+
+    public string? Lofic { get; set; }
+
+    public virtual ICollection<EquipoEam> EquipoEams { get; } = new List<EquipoEam>();
+
+    public virtual Centro IdCentroNavigation { get; set; } = null!;
+
+    public virtual Division? IdDivisionNavigation { get; set; }
+
+    public virtual ICollection<LibroNove> LibroNoves { get; } = new List<LibroNove>();
+
+    public virtual ICollection<LinAre> LinAres { get; } = new List<LinAre>();
 }

@@ -1,41 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TiempoPerdido.Models
+namespace TiempoPerdido.Models;
+
+/// <summary>
+/// variable de calidad auditadas
+/// </summary>
+public partial class VarCa
 {
     /// <summary>
-    /// variable de calidad auditadas
+    /// identificador de la variable de calidad
     /// </summary>
-    public partial class VarCa
-    {
-        public VarCa()
-        {
-            DatAudCas = new HashSet<DatAudCa>();
-            VarAres = new HashSet<VarAre>();
-        }
+    public int IdVarCa { get; set; }
 
-        /// <summary>
-        /// identificador de la variable de calidad
-        /// </summary>
-        public int IdVarCa { get; set; }
-        /// <summary>
-        /// nombre de la variable
-        /// </summary>
-        public string Vcnom { get; set; } = null!;
-        /// <summary>
-        /// Detalle de la variable
-        /// </summary>
-        public string? Vcdetalle { get; set; }
-        /// <summary>
-        /// 0: no de tipo observable 1:es de tipo numerico
-        /// </summary>
-        public bool Vcisobser { get; set; }
-        /// <summary>
-        /// 0: Inactivo, 1:Activo
-        /// </summary>
-        public bool Vcestado { get; set; }
+    /// <summary>
+    /// nombre de la variable
+    /// </summary>
+    public string Vcnom { get; set; } = null!;
 
-        public virtual ICollection<DatAudCa> DatAudCas { get; set; }
-        public virtual ICollection<VarAre> VarAres { get; set; }
-    }
+    /// <summary>
+    /// Detalle de la variable
+    /// </summary>
+    public string? Vcdetalle { get; set; }
+
+    public double Vcmax { get; set; }
+
+    public double Vcmin { get; set; }
+
+    public double Vcobj { get; set; }
+
+    /// <summary>
+    /// 0: no de tipo observable 1:es de tipo numerico
+    /// </summary>
+    public bool Vcisobser { get; set; }
+
+    /// <summary>
+    /// 0: Inactivo, 1:Activo
+    /// </summary>
+    public bool Vcestado { get; set; }
+
+    public virtual ICollection<DatAudCa> DatAudCas { get; } = new List<DatAudCa>();
+
+    public virtual ICollection<VarAre> VarAres { get; } = new List<VarAre>();
 }

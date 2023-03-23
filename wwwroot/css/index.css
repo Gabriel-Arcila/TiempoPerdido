@@ -5,58 +5,36 @@
 
 #cajaPadre {
     width: 100%;
-    height: 70vh;
+    height: 100vh;
     /* background-color: brown; */
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
 }
 
-#cajalogo {
+#cajaContenido {
     width: 50%;
-    height: 50%;
-    display: flex;
-    justify-content: center;
-    align-items:flex-start;
+    height: 100vh;
     /* background-color:aqua; */
 }
 
-.cajaContenido{
-    width: 100%;
+#cajaImg {
+    width: 50%;
+    height: 70vh;
+    color: rgba(63, 47, 47, 0.979);
+    /* background-color:aquamarine; */
+}
+
+#logoindex{
+    width: 35%;
+    height: 50%;
+}
+
+#cajaLogo {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    margin: 10px;
 }
-
-#link_on{
-    width: 100%;
-    height: 100%;
-    padding: 20%;
-    display: flex;
-    flex-wrap:wrap;
-    justify-content: center;
-    align-items:flex-start;
-    outline: invert;
-    text-decoration: none;
-}
-#link_on:hover{
-    text-decoration:underline rgb(0, 120, 60);
-}
-
-#ontext{
-    font-size: 1.5em;
-    width: 100%;
-    text-align: center;
-    color: black;
-}
-
-
-
-
-
-
-
 
 #Layer_1 {
     height: 100%;
@@ -131,4 +109,9 @@ footer {
     height: 70%;
     width: 100%;
     background-color: bisque;
+}
+.AbajoBoton{
+    display: flex;
+    justify-content:flex-start;
+    align-items: end;
 }

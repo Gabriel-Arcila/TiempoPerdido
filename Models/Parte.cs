@@ -1,37 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TiempoPerdido.Models
+namespace TiempoPerdido.Models;
+
+/// <summary>
+/// Partes que componen el area
+/// </summary>
+public partial class Parte
 {
     /// <summary>
-    /// Partes que componen el area
+    /// identificador
     /// </summary>
-    public partial class Parte
-    {
-        public Parte()
-        {
-            ParAres = new HashSet<ParAre>();
-            TiPaPars = new HashSet<TiPaPar>();
-        }
+    public int IdParte { get; set; }
 
-        /// <summary>
-        /// identificador
-        /// </summary>
-        public int IdParte { get; set; }
-        /// <summary>
-        /// nombre de la parte
-        /// </summary>
-        public string Pnombre { get; set; } = null!;
-        /// <summary>
-        /// detalle de la parte
-        /// </summary>
-        public string? Pdetalle { get; set; }
-        /// <summary>
-        /// 0: Inactivo, 1:Activo
-        /// </summary>
-        public bool Pestado { get; set; }
+    /// <summary>
+    /// nombre de la parte
+    /// </summary>
+    public string Pnombre { get; set; } = null!;
 
-        public virtual ICollection<ParAre> ParAres { get; set; }
-        public virtual ICollection<TiPaPar> TiPaPars { get; set; }
-    }
+    /// <summary>
+    /// detalle de la parte
+    /// </summary>
+    public string? Pdetalle { get; set; }
+
+    /// <summary>
+    /// 0: Inactivo, 1:Activo
+    /// </summary>
+    public bool Pestado { get; set; }
+
+    public virtual ICollection<ParAre> ParAres { get; } = new List<ParAre>();
+
+    public virtual ICollection<TiPaPar> TiPaPars { get; } = new List<TiPaPar>();
 }

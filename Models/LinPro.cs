@@ -1,27 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TiempoPerdido.Models
+namespace TiempoPerdido.Models;
+
+/// <summary>
+/// intermediario entre linea y producto
+/// </summary>
+public partial class LinPro
 {
     /// <summary>
-    /// intermediario entre linea y producto
+    /// identificador de la Lin_Pro
     /// </summary>
-    public partial class LinPro
-    {
-        /// <summary>
-        /// identificador de la Lin_Pro
-        /// </summary>
-        public int IdLinPro { get; set; }
-        /// <summary>
-        /// identificador de la linea
-        /// </summary>
-        public int IdLinea { get; set; }
-        /// <summary>
-        /// identificador del producto
-        /// </summary>
-        public int IdProducto { get; set; }
+    public int IdLinPro { get; set; }
 
-        public virtual Linea IdLineaNavigation { get; set; } = null!;
-        public virtual Producto IdProductoNavigation { get; set; } = null!;
-    }
+    /// <summary>
+    /// identificador de la linea
+    /// </summary>
+    public int IdLinea { get; set; }
+
+    /// <summary>
+    /// identificador del producto
+    /// </summary>
+    public int IdProducto { get; set; }
+
+    public virtual Linea IdLineaNavigation { get; set; } = null!;
+
+    public virtual Producto IdProductoNavigation { get; set; } = null!;
 }

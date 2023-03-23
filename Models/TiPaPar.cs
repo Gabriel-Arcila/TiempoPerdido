@@ -1,27 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TiempoPerdido.Models
+namespace TiempoPerdido.Models;
+
+/// <summary>
+/// intermediario entre el tipo de parada y la parte
+/// </summary>
+public partial class TiPaPar
 {
     /// <summary>
-    /// intermediario entre el tipo de parada y la parte
+    /// identificador del TiPa_Par
     /// </summary>
-    public partial class TiPaPar
-    {
-        /// <summary>
-        /// identificador del TiPa_Par
-        /// </summary>
-        public int IdTiPaPar { get; set; }
-        /// <summary>
-        /// identificador de tipo de parada
-        /// </summary>
-        public int IdTiParTp { get; set; }
-        /// <summary>
-        /// identifiacador de la parte
-        /// </summary>
-        public int IdParte { get; set; }
+    public int IdTiPaPar { get; set; }
 
-        public virtual Parte IdParteNavigation { get; set; } = null!;
-        public virtual TiParTp IdTiParTpNavigation { get; set; } = null!;
-    }
+    /// <summary>
+    /// identificador de tipo de parada
+    /// </summary>
+    public int IdTiParTp { get; set; }
+
+    /// <summary>
+    /// identifiacador de la parte
+    /// </summary>
+    public int IdParte { get; set; }
+
+    public virtual Parte IdParteNavigation { get; set; } = null!;
+
+    public virtual TiParTp IdTiParTpNavigation { get; set; } = null!;
 }

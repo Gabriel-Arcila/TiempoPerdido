@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TiempoPerdido.Models
+namespace TiempoPerdido.Models;
+
+public partial class Pai
 {
-    public partial class Pai
-    {
-        public Pai()
-        {
-            Empresas = new HashSet<Empresa>();
-        }
+    public int IdPais { get; set; }
 
-        public int IdPais { get; set; }
-        public string Pnombre { get; set; } = null!;
-        public bool Pestado { get; set; }
+    public string Pnombre { get; set; } = null!;
 
-        public virtual ICollection<Empresa> Empresas { get; set; }
-    }
+    public bool Pestado { get; set; }
+
+    public virtual ICollection<Empresa> Empresas { get; } = new List<Empresa>();
+
+    public virtual ICollection<ReuDium> ReuDia { get; } = new List<ReuDium>();
 }

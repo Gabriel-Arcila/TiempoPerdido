@@ -1,132 +1,138 @@
-﻿@* @inherits LayoutComponentBase
-
-<PageTitle>TiempoPerdido</PageTitle>
-
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div> *@
-
-@inherits LayoutComponentBase
-@inject NavigationManager NavigationManager
-@inject UsuarioServices usuarioServices
-@implements IDisposable
-@inject HttpClient Http
-@inject AuthenticationStateProvider AuthStateProvider
+﻿@inherits LayoutComponentBase
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
 @inject ILocalStorageService LocalStorage
 @inject NavigationManager NavigationManager
 
-<PageTitle>Neo</PageTitle>
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
+
+<PageTitle>Tiempo Perdido</PageTitle>
 
 <div class="page">
-    @* <div class="sidebar">
-        <NavMenu />
-    </div>
 
-    <main>
-        <div class="top-row px-4">
-            @if(usuarioServices.login){
-                <BSButton Color="BSColor.Success" IsOutlined="true"  @onclick="logout">Logout</BSButton>
-            }
-        </div> *@
-        <AuthorizeView>
-            <Authorized>
-                <div class="sidebar">
-                    <NavMenu />
+    <AuthorizeView>
+        <Authorized>
+
+            <div class="sidebar">
+                <NavMenu />
+            </div>
+
+            <main>
+                <div class="top-row px-4 cabeza">
+                    <h5 style="text-align: start;">
+                    </h5>
+                    <BSButton Color="BSColor.Success" IsOutlined="true" @onclick="logout">Logout</BSButton>
                 </div>
-                <main>
-                    <div class="top-row px-4">
-                        <LoginLogoutButton />
-                    </div>
-                    <article class="content px-4">
-                        @Body
-                    </article>
-                </main>
-            </Authorized>
-            <NotAuthorized>
-                <main>
-                    <div class="text-center fondo">
-                        <div class="form-signin w-25 m-auto loginform ">
-                            <img class="mb-4" id="logoLogin" src="./img/Neo.png" >
-                            <h1 class="h3 mb-3 fw-normal">Inicie Sesión</h1>
-                            <BSForm Model="user"   OnSubmit="HandleLogin">
-                                @* <DataAnnotationsValidator /> *@
-                                <div class="form-floating">
-                                <BSLabel IsHidden="true">User</BSLabel>
-                                    <BSInput InputType="InputType.Text" placeholder="Ficha/Usuario"  @bind-Value="user.UserName"/>
-                                    @* <BSFeedback For="@(() => user.UserName)" ValidMessage="Correcto." /> *@
-                                </div>
-                                <div class="form-floating">
-                                        <BSLabel IsHidden="true">Password</BSLabel>
-                                    <BSInput InputType="InputType.Password" @bind-Value="user.Password"/>
-                                    @* <BSFeedback For="@(() => user.Password)" ValidMessage="Correcto." /> *@
-                                </div>
-                                <BSButton   Class="w-100 btn btn-lg" Color="BSColor.Success"  Size="Size.ExtraExtraLarge" IsSubmit>  Iniciar</BSButton>
-                                <p class="mt-5 mb-3 text-muted">Neo 2022</p>
-                            </BSForm>
-                        </div>
-                    </div>
-                </main>
-            </NotAuthorized>
-        </AuthorizeView>
-</div>
-@code{
-    UserLoginDto user = new UserLoginDto();
 
-    protected void logout(){
-        usuarioServices.logout();
-        NavigationManager.NavigateTo("acceso");
+                <article class="content px-4">
+                    @Body
+                </article>
+            </main>
+        </Authorized> 
+
+        <NotAuthorized>
+            <main>
+                <div class="text-center fondo">
+                    <div class="form-signin w-25 m-auto loginform ">
+                        <BSAlert IsOpen="_showTooltip" style="height:55px;" class="alertaInfo">
+                            <h5>@mensaje</h5>
+                        </BSAlert> 
+
+                        <img class="mb-4" id="logoLogin" src="./img/Neo.png">
+                        <h1 class="h3 mb-3 fw-normal">Inicie Sesión</h1>
+                                <BSLabel IsHidden="true">User</BSLabel>
+
+                                <BSInput InputType="InputType.Text" Required placeholder="Usuario"
+                                    @bind-Value="usuario" />
+                        
+                                <BSInput InputType="InputType.Password" Required placeholder="Contraseña"
+                                    @bind-Value="contrasena" />
+                                
+                                <BSInput InputType="InputType.Password" Required placeholder="ficha"
+                                    @bind-Value="ficha" />
+                            <br>
+                            <BSButton IsDisabled="@isDisabled" @onclick=login Class="w-100 btn btn-lg" Color="BSColor.Success" Size="Size.ExtraExtraLarge">login</BSButton>
+                    </div>
+                </div>              
+            </main>
+        </NotAuthorized>
+
+    </AuthorizeView> 
+
+</div>
+
+@code {
+
+    private string? mensaje { get; set;} = "Bienvenido";
+    private bool isDisabled  { get; set;} = false;
+    private string proyecto { get; set;} = "";
+    private string usuario {get; set;} = "";
+    private string ficha {get; set;} = "";
+    private string contrasena {get; set;} = "";
+
+    public int idLinea {get; set;}
+
+    private UserLoginDto userDto {get; set;}
+
+    private HttpResponseMessage result {get; set;}
+
+    private string validarToken  {get; set;}
+    
+    protected override async Task  OnInitializedAsync()
+    {
+        mensaje = "Ingrese la ficha";
+        proyecto = "LibroDeNovedades";
+        userDto = new UserLoginDto() ;
     }
 
-    protected async Task HandleLogin(EditContext e)
-    {
-        user.Proyecto = "TiempoPerdido";
-        if (e.Validate())
+
+
+    protected async Task logout(){
+        await LocalStorage.RemoveItemAsync("TiempoPerdido");
+        await LocalStorage.RemoveItemAsync("ficha");
+        await AuthStateProvider.GetAuthenticationStateAsync();
+    }
+
+
+    protected async Task login(){
+        isDisabled = true;
+        mensaje = "Cargando...";
+        int numCaracteres = ficha.Trim().Count();
+        if (usuario.Trim() != "" && contrasena.Trim() != "" && ficha.Trim() != "" && numCaracteres == 5)
         {
-            @* var result = await Http.PostAsJsonAsync("http://operaciones.papeleslatinos.com/Authentication/api/Auth/Login", user);
-            var ValidarToken = await result.Content.ReadAsStringAsync(); *@
-            var ValidarToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoaSI6ImhpIiwiaGkyIjoiaGkyIn0.CedXpV1yqmBSf76LSFQaDIGekRv_GNFfzODJZSL0src";
-            if (ValidarToken != null)
+            userDto.Proyecto = proyecto;
+            userDto.UserName = usuario;
+            userDto.Password = contrasena;
+            result = await Http.PostAsJsonAsync("http://neo.paveca.com.ve/Authentication/api/Auth/Login", userDto);
+            validarToken = await result.Content.ReadAsStringAsync();
+            if (validarToken != null)
             {
-                if (ValidarToken == "NotFoundUser")
+                if (validarToken == "NotFoundUser")
                 {
-
+                    mensaje = "Verifique el usuario";
                 }
-                else if (ValidarToken == "WrongPassword")
+                else if (validarToken == "WrongPassword")
                 {
-
+                    mensaje = "Verifique la contraseña";
                 }
-                else if (ValidarToken == "null")
+                else if (validarToken == "null")
                 {
-
+                    mensaje = "Verifique el usuario";
                 }
                 else
                 {
-                    Console.WriteLine(ValidarToken);
-                    await LocalStorage.SetItemAsync("TiempoPerdido", ValidarToken);
-                    await AuthStateProvider.GetAuthenticationStateAsync();
-                    user = new UserLoginDto();
+                    await LocalStorage.SetItemAsync("TiempoPerdido", validarToken);
+                    await LocalStorage.SetItemAsync("ficha", ficha);
+                    await AuthStateProvider.GetAuthenticationStateAsync();    
                     NavigationManager.NavigateTo("");
+                    mensaje = "Bienvenido";
                 }
+            }else{
+                mensaje = "Hubo un error. Por favor intende de nuevo";
             }
-        }  
-    }
-
-    public void Dispose()
-    {
-        if(usuarioServices.login){
-            usuarioServices.Onchange -= StateHasChanged;
+        }else{
+            mensaje = "Ingrese un usuario, contraseña valida y ficha valida";
         }
+        isDisabled = false;
     }
 }

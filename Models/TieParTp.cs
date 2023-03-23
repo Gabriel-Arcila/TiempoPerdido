@@ -1,41 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TiempoPerdido.Models
+namespace TiempoPerdido.Models;
+
+/// <summary>
+/// tiempo parado en el turno
+/// </summary>
+public partial class TieParTp
 {
     /// <summary>
-    /// tiempo parado en el turno
+    /// identificador del tiempo parado de un turno
     /// </summary>
-    public partial class TieParTp
-    {
-        /// <summary>
-        /// identificador del tiempo parado de un turno
-        /// </summary>
-        public int IdTieParTp { get; set; }
-        /// <summary>
-        /// identificador del turno
-        /// </summary>
-        public int IdParsiOee { get; set; }
-        /// <summary>
-        /// identificador de la parada
-        /// </summary>
-        public int IdParaTp { get; set; }
-        /// <summary>
-        /// fecha de inicio de la parada
-        /// </summary>
-        public DateTime Tefechai { get; set; }
-        /// <summary>
-        /// fecha final de la parada
-        /// </summary>
-        public DateTime? Tefechaf { get; set; }
-        /// <summary>
-        /// duracion de la parada
-        /// </summary>
-        public double? Teduracion { get; set; }
-        public int? IdCaLinAre { get; set; }
+    public int IdTieParTp { get; set; }
 
-        public virtual LinAre? IdCaLinAreNavigation { get; set; }
-        public virtual ParaTp IdParaTpNavigation { get; set; } = null!;
-        public virtual ParsiOee IdParsiOeeNavigation { get; set; } = null!;
-    }
+    /// <summary>
+    /// identificador del turno
+    /// </summary>
+    public int IdParsiOee { get; set; }
+
+    /// <summary>
+    /// identificador de la parada
+    /// </summary>
+    public int IdParaTp { get; set; }
+
+    /// <summary>
+    /// fecha de inicio de la parada
+    /// </summary>
+    public DateTime Tefechai { get; set; }
+
+    /// <summary>
+    /// fecha final de la parada
+    /// </summary>
+    public DateTime? Tefechaf { get; set; }
+
+    /// <summary>
+    /// duracion de la parada
+    /// </summary>
+    public double? Teduracion { get; set; }
+
+    public int? IdAreAfect { get; set; }
+
+    public virtual AreAfect? IdAreAfectNavigation { get; set; }
+
+    public virtual ParaTp IdParaTpNavigation { get; set; } = null!;
+
+    public virtual ParsiOee IdParsiOeeNavigation { get; set; } = null!;
 }

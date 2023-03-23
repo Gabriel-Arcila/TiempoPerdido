@@ -1,81 +1,20 @@
-@page "/"
-@inject NavigationManager Navigation
-@inject IDataOperador DataOperador;
-@inject IDataTurnoTp DataTurnoTp;
+@page "/home"
 
-<PageTitle>Tiempo Perdido</PageTitle>
-
-@* <BSContainer PaddingBottom="Padding.Large">
-    <BSRow>
-        <h1 class="titulo">NEO</h1>
-    </BSRow>
-</BSContainer> *@
-
-<BSCard CardType="CardType.Card" style="width: 90%;" MarginBottom="Margins.Large">
-    <BSCard CardType="CardType.Body">
-        <BSCard class="titulo" CardType="CardType.Title">Tiempo Perdido</BSCard>
-        <BSCard CardType="CardType.Text">
-            <section id="cajaPadre">
-                <section id="cajalogo">
-                    <BSImage id="logo" Source="img/Neo.png"/> 
-                </section>
-                <BSForm class="cajaContenido" Model="ficha" IsRow="true" Gutters="Gutters.Medium" OnSubmit="OK">
-                    <section class="cajaContenido">
-                        <BSCol Position="Position.Relative" Place ColumnMedium="4">
-                            <BSInput InputType="InputType.TextArea"  placeholder="@info" rows="1" @bind-Value="ficha"></BSInput>
-                        </BSCol>
-                    </section>
-                    <section class="cajaContenido">
-                        <section class="cajaimghome">
-                            <BSButton IsSubmit="true" IsDisabled="@isDisabled"  id="link_on">
-                                <BSImage Source="img/Encendido.svg" />
-                                <h1 id="ontext">Iniciar Turno</h1>
-                            </BSButton>
-                        </section>
-                    </section>
-                </BSForm>
-            </section>
-        </BSCard>
-    </BSCard>
-</BSCard>
-
-@code {
-    private string mensaje { get; set; }
-    private string ficha { get; set; }
-    private string info { get; set; }
-    private bool isDisabled { get; set; }
-    private Operador operador { get; set; }
-    private TurnoTp turnoActual { get; set; }
-
-    private bool isOk { get; set; }
-    
-    protected override async Task  OnInitializedAsync()
-    {
-        ficha = "";
-        operador = new Operador();
-        isDisabled = false;
-        turnoActual = await DataTurnoTp.TurnoActual(1);
-        info = "Coloque la Ficha";
-    }
-
-    protected async Task OK(EditContext e){
-        isDisabled = true;
-        ficha = ficha.ToUpper().Trim();
-        operador = await DataOperador.BuscarOperador(ficha);
-        var a = DateTime.Now.Date;
-        if(operador != null){
-            @* isOk = await DataTurnoTp.ActulizarTurno(turnoActual); *@
-            isOk = true;
-            if(isOk){
-                Navigation.NavigateTo("Paradas");
-            }else{
-                ficha = "";
-                info = "Error en la carga. Intente de nuevo";
-            }
-        }else{
-            ficha = "";
-            info = "Ficha Invalida";
-        }
-        isDisabled = false;
-    }
-}
+<PageTitle>Index</PageTitle>
+    <section id="cajaPadre">
+        <section id="cajaContenido">
+            <div id="cajaLogo">
+                <BSImage id="logoindex" Source="img/LogoGris.png" />
+            </div>
+            <div id="cajaInformacion">
+                <p id="tituloInfo">Información</p>
+                <ul id="Info">
+                    <li>Pestaña 1: Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsam obcaecati natus beatae vitae ad ullam, tenetur deserunt, quod laudantium vero sit delectus optio necessitatibus accusamus laboriosam aspernatur. Possimus, placeat incidunt!</li>
+                    <li>Pestaña 2: Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis sapiente quasi, labore omnis repellat reprehenderit perspiciatis unde deserunt saepe minima modi tempore molestias. Repellendus aut dolores iure quo nobis dicta?</li>
+                </ul>
+            </div>
+        </section>
+        <section id="cajaImg">
+            <BSImage Source="img/Neo.png" />
+        </section>
+</section>

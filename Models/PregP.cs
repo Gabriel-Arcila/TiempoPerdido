@@ -1,35 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TiempoPerdido.Models
+namespace TiempoPerdido.Models;
+
+/// <summary>
+/// preguntas de satisfaccion
+/// </summary>
+public partial class PregP
 {
     /// <summary>
-    /// preguntas de satisfaccion
+    /// identificador de la pregunta
     /// </summary>
-    public partial class PregP
-    {
-        public PregP()
-        {
-            RespPs = new HashSet<RespP>();
-        }
+    public int IdPregP { get; set; }
 
-        /// <summary>
-        /// identificador de la pregunta
-        /// </summary>
-        public int IdPregP { get; set; }
-        /// <summary>
-        /// pregunta de la encuesta
-        /// </summary>
-        public string Ppnombre { get; set; } = null!;
-        /// <summary>
-        /// (0:no tiene observacion,1: tiene observacion)
-        /// </summary>
-        public bool PpisObser { get; set; }
-        /// <summary>
-        /// estatus(0:inactivo,1:activo)
-        /// </summary>
-        public bool Ppestatus { get; set; }
+    /// <summary>
+    /// pregunta de la encuesta
+    /// </summary>
+    public string Ppnombre { get; set; } = null!;
 
-        public virtual ICollection<RespP> RespPs { get; set; }
-    }
+    /// <summary>
+    /// (0:no tiene observacion,1: tiene observacion)
+    /// </summary>
+    public bool PpisObser { get; set; }
+
+    /// <summary>
+    /// estatus(0:inactivo,1:activo)
+    /// </summary>
+    public bool Ppestatus { get; set; }
+
+    public virtual ICollection<RespP> RespPs { get; } = new List<RespP>();
 }
