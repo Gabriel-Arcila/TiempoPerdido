@@ -4,6 +4,7 @@
 @inject IDataTurnoTp DataTurnoTp;
 @inject IDataDivision DataDivision;
 @inject IDataLinea DataLinea;
+@inject IDataAPI DataAPI;
 
 <PageTitle>Tiempo Perdido</PageTitle>
 
@@ -13,19 +14,33 @@
     </BSRow>
 </BSContainer> *@
 
-<BSCard CardType="CardType.Card" style="width: 90%;" MarginBottom="Margins.Large">
+<BSCard CardType="CardType.Card" MarginBottom="Margins.Large">
+    <BSAlert IsOpen="_showTooltip" style="height:55px;" class="alertaInfo">
+        <h5>@info</h5>
+    </BSAlert>
     <BSCard CardType="CardType.Body">
-        @* <BSCard class="titulo" CardType="CardType.Title">Tiempo Perdido</BSCard> *@
         <BSCard CardType="CardType.Text">
             <section id="cajaPadre">
-                <section id="cajalogo">
-                    <BSImage id="logo" Source="img/Neo.png"/> 
+                <section class="cajaContenido">
+                    <section class="cajaimghome">
+                        <BSButton IsSubmit="true" IsDisabled="@isDisabled"  id="link_on">
+                            <BSImage Source="img/Neo.png" />
+                            <h1 id="ontext">Iniciar Turno</h1>
+                        </BSButton>
+                    </section>
                 </section>
-                <BSForm class="cajaContenido" Model="ficha" IsRow="true" Gutters="Gutters.Medium" OnSubmit="OK">
-                    <section class="cajaContenido">
+                @* <BSButton IsSubmit="true" IsDisabled="@isDisabled"  id="link_on">
+                    <section id="cajalogo">
+                        <BSImage id="logo" Source="img/Neo.png"/> 
+                        <h1 id="ontext">Iniciar Turno</h1>
+                    </section>
+                </BSButton> *@
+                <BSForm class="cajaContenido" Model="usuarioTurno" IsRow="true" Gutters="Gutters.Medium" OnSubmit="OK">
+                    <DataAnnotationsValidator />
+                    <section class="cajaFormulario">
                         <BSCol Position="Position.Relative" Place ColumnMedium="4">
-
-                            <BSInput InputType="InputType.Select"  placeholder="@info" rows="1" @bind-Value="idLinea">
+                            <BSLabel class="labelFormulario">Linea</BSLabel>
+                            <BSInput InputType="InputType.Select"  rows="1" @onchange=BucarProducto @bind-Value="usuarioTurno.idLinea">
                                 <option value="0">Seleccione</option>
                                 @if(listaLinea != null){
                                         @foreach (var item in listaLinea)
@@ -36,18 +51,41 @@
                                     <option value="0">Cargando...</option>
                                 }
                             </BSInput> 
+                            <BSFeedback For="@(() => usuarioTurno.idLinea)"/> 
+                            
+                        </BSCol>
 
-                            @* <BSInput InputType="InputType.TextArea"  placeholder="@info" rows="1" @bind-Value="ficha"></BSInput> *@
+                        <BSCol Position="Position.Relative" Place ColumnMedium="4">
+                            <BSLabel class="labelFormulario">Ficha</BSLabel>
+                            <BSInput InputType="InputType.Text" rows="1"  @bind-Value="usuarioTurno.ficha"/>
+                            <BSFeedback For="@(() => usuarioTurno.ficha)"/> 
+                        </BSCol>
+
+                        <BSCol Position="Position.Relative" Place ColumnMedium="4">
+                            <BSLabel class="labelFormulario">Producto</BSLabel>
+                            <BSInput InputType="InputType.Select" rows="1"  @bind-Value="usuarioTurno.productos">
+                                @if(listaDeProductos != null){
+                                        <option value="0">Seleccione</option>
+                                        @foreach (var item in listaDeProductos)
+                                        {
+                                            <option value="@item.Key">@item.Value</option>
+                                        }
+                                }else{
+                                    <option value="0">Cargando...</option>
+                                }
+                            </BSInput> 
+                            <BSFeedback For="@(() => usuarioTurno.productos)"/> 
+                            
                         </BSCol>
                     </section>
-                    <section class="cajaContenido">
+                    @* <section class="cajaContenido">
                         <section class="cajaimghome">
                             <BSButton IsSubmit="true" IsDisabled="@isDisabled"  id="link_on">
                                 <BSImage Source="img/Encendido.png" />
                                 <h1 id="ontext">Iniciar Turno</h1>
                             </BSButton>
                         </section>
-                    </section>
+                    </section> *@
                 </BSForm>
             </section>
         </BSCard>
@@ -59,24 +97,24 @@
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
     
-    [CascadingParameter]
-    public int idLinea {get; set;}
     private bool isDisabled { get; set; }
     private string info { get; set; }
     private int idDivision { get; set; }
-    private string ficha { get; set; }
     private Operador operador { get; set; }
     private TurnoTp turnoActual { get; set; }
     private bool isOk { get; set; }
     private List<Linea> listaLinea  { get; set; }
+    private Dictionary<string, string> listaDeProductos {get; set;}
+    private UsuarioTurno usuarioTurno {get; set;}
+
+    private TurnoTp turnoTp {get; set;}
     
     protected override async Task  OnInitializedAsync()
     {
-        ficha = "";
+        usuarioTurno = new UsuarioTurno();
         operador = new Operador();
         isDisabled = false;
-        turnoActual = await DataTurnoTp.TurnoActual(1);
-        info = "Coloque la Ficha";
+        info = "Inicie Turno";
         if (authenticationState is not null)
         {
             AuthenticationState? authState = await authenticationState;
@@ -89,26 +127,37 @@
         }
     }
 
-    protected async Task hi(){}
+    protected async Task BucarProducto(ChangeEventArgs e){
+        listaDeProductos = null;
+        usuarioTurno.idLinea = int.Parse(e.Value.ToString());
+        if(usuarioTurno.idLinea != 0){
+            string centroCosto  = listaLinea.Where(l => l.IdLinea == usuarioTurno.idLinea).First().LcenCos ?? "0";
+            listaDeProductos = await DataAPI.ObtenerProductosActualesConOrdenesAbiertas(centroCosto) ?? new Dictionary<string, string>() ;
+        }
+        
+    }
 
     protected async Task OK(EditContext e){
-        isDisabled = true;
-        ficha = ficha.ToUpper().Trim();
-        operador = await DataOperador.BuscarOperador(ficha);
-        var a = DateTime.Now.Date;
-        if(operador != null){
-            @* isOk = await DataTurnoTp.ActulizarTurno(turnoActual); *@
-            isOk = true;
-            if(isOk){
-                Navigation.NavigateTo("Paradas");
+        if (e.Validate())
+        {
+            isDisabled = true;
+            usuarioTurno.ficha = usuarioTurno.ficha.ToUpper().Trim();
+            Dictionary<string, string> data = await DataAPI.obtenerUsuario(usuarioTurno.ficha);
+            DateTime hoy = DateTime.Now.Date;
+            if(data["nombre"] != null){
+                turnoTp = await DataTurnoTp.TurnoActual(usuarioTurno.idLinea);
+                turnoTp.ToperaFich = usuarioTurno.ficha;
+                turnoTp.TcodiProdu = usuarioTurno.productos;
+                
+                if(turnoTp != null){
+                    await DataTurnoTp.ActulizarTurno(turnoTp);
+                }
+                
             }else{
-                ficha = "";
-                info = "Error en la carga. Intente de nuevo";
+                usuarioTurno.ficha = "";
+                info = "Ficha Invalida";
             }
-        }else{
-            ficha = "";
-            info = "Ficha Invalida";
+            isDisabled = false;
         }
-        isDisabled = false;
     }
 }

@@ -12,8 +12,9 @@ namespace TiempoPerdido.Data.API
         Task<Dictionary<string,string>>? obtenerUsuario(string ficha);
         Task<List<List<string>>>? obtenerParadasActualesturnoPorLineaAgrupadas(string centroCosto);
         // Task<System.Net.Http.HttpResponseMessage> PostDiscrepancia(BdDiv1 bdDiv1);
-
         Task<List<string>>? ObtenerTurnoYGrupo();
+        Task<Dictionary<string,string>>? ObtenerProductosActuales(string centroCostoLinea);
+        Task<Dictionary<string,string>> ObtenerProductosActualesConOrdenesAbiertas(string centroCostoLinea);
     }
 
     public class DataAPI : IDataAPI
@@ -21,7 +22,7 @@ namespace TiempoPerdido.Data.API
         private HttpClient cliente;
         public async Task<List<List<string>>>? obtenerParadasActuales1turnoPorLinea(string centroCosto){
             List<List<string>> data;
-            string url = "http://operaciones.papeleslatinos.com/neoapi/gespline/obtenerParadasActuales1turnoPorLinea/" + centroCosto;
+            string url = "http://neo.paveca.com.ve/neoapi/gespline/obtenerParadasActuales1turnoPorLinea/" + centroCosto;
             this.cliente = new HttpClient();
             data = await cliente.GetFromJsonAsync<List<List<string>>>(url);
             return data;
@@ -29,7 +30,7 @@ namespace TiempoPerdido.Data.API
 
         public async Task<List<List<string>>>? obtenerParadasActuales1turnoPorLineaAgrupados(string centroCosto){
             List<List<string>> data;
-            string url = "http://operaciones.papeleslatinos.com/neoapi/gespline/ObtenerParadasGesplienActualesAgrupados1turno/" + centroCosto;
+            string url = "http://neo.paveca.com.ve/neoapi/gespline/ObtenerParadasGesplienActualesAgrupados1turno/" + centroCosto;
             this.cliente = new HttpClient();
             data = await cliente.GetFromJsonAsync<List<List<string>>>(url);
             return data;
@@ -37,14 +38,14 @@ namespace TiempoPerdido.Data.API
 
         public async Task<List<List<string>>>? obtenerParadasActuales2turnoPorLineaAgrupadosDespuesDeLas0am(string centroCosto){
             List<List<string>> data;
-            string url = "http://operaciones.papeleslatinos.com/neoapi/gespline/ObtenerParadasGesplienActualesAgrupados2turnoDespuesDeLas0am/" + centroCosto;
+            string url = "http://neo.paveca.com.ve/neoapi/gespline/ObtenerParadasGesplienActualesAgrupados2turnoDespuesDeLas0am/" + centroCosto;
             this.cliente = new HttpClient();
             data = await cliente.GetFromJsonAsync<List<List<string>>>(url);
             return data;
         }
         public async Task<List<List<string>>>? obtenerParadasActuales2turnoPorLineaAgrupadosAntesDeLas0am(string centroCosto){
             List<List<string>> data;
-            string url = "http://operaciones.papeleslatinos.com/neoapi/gespline/ObtenerParadasGesplienActualesAgrupados2turnoAntesDeLas0am/" + centroCosto;
+            string url = "http://neo.paveca.com.ve/neoapi/gespline/ObtenerParadasGesplienActualesAgrupados2turnoAntesDeLas0am/" + centroCosto;
             this.cliente = new HttpClient();
             data = await cliente.GetFromJsonAsync<List<List<string>>>(url);
             return data;
@@ -54,7 +55,7 @@ namespace TiempoPerdido.Data.API
 
         public async Task<List<List<string>>>? obtenerParadasActuales2turnoPorLinea(string centroCosto){
             List<List<string>> data;
-            string url = "http://operaciones.papeleslatinos.com/neoapi/gespline/ObtenerParadasSegundoTurnoPorMaquina/" + centroCosto;
+            string url = "http://neo.paveca.com.ve/neoapi/gespline/ObtenerParadasSegundoTurnoPorMaquina/" + centroCosto;
             this.cliente = new HttpClient();
             data = await cliente.GetFromJsonAsync<List<List<string>>>(url);
             return data;
@@ -96,7 +97,7 @@ namespace TiempoPerdido.Data.API
                 if(ParadasIgnorar == "[]"){
                     return await this.obtenerParadasActuales1turnoPorLinea(centroCosto);
                 }
-                string url = "http://operaciones.papeleslatinos.com/neoapi/gespline/obtenerParadasActuales1turnoPorLinea/" + centroCosto + "/" + ParadasIgnorar;
+                string url = "http://neo.paveca.com.ve/neoapi/gespline/obtenerParadasActuales1turnoPorLinea/" + centroCosto + "/" + ParadasIgnorar;
                 data = await cliente.GetFromJsonAsync<List<List<string>>>(url);     
                 return data;
             }
@@ -125,7 +126,7 @@ namespace TiempoPerdido.Data.API
                     }
                     ParadasIgnorar += "]";
                 }
-                string url = "http://operaciones.papeleslatinos.com/neoapi/gespline/ObtenerParadasSegundoTurnoPorMaquina/" + centroCosto + "/" + ParadasIgnorar;
+                string url = "http://neo.paveca.com.ve/neoapi/gespline/ObtenerParadasSegundoTurnoPorMaquina/" + centroCosto + "/" + ParadasIgnorar;
                 data = await cliente.GetFromJsonAsync<List<List<string>>>(url);     
                 return data;
             }
@@ -140,19 +141,39 @@ namespace TiempoPerdido.Data.API
             }
         }
         public async Task<Dictionary<string,string>>? obtenerUsuario(string ficha){
-            Dictionary<string,string> usuario = new Dictionary<string,string>();
-            string url = "http://operaciones.papeleslatinos.com/neoapi/usuario/BuscarUsuarioPorFicha/" + ficha;
-            this.cliente = new HttpClient();
-            usuario = await cliente.GetFromJsonAsync<Dictionary<string,string>>(url);
+            Dictionary<string,string>? usuario = new Dictionary<string,string>();
+            try{
+                string url = "http://neo.paveca.com.ve/neoapi/usuario/BuscarUsuarioPorFicha/" + ficha;
+                this.cliente = new HttpClient();
+                usuario = await cliente.GetFromJsonAsync<Dictionary<string,string>?>(url);
+            }catch(Exception ex){
+                Console.WriteLine(ex.Message);
+            }
             return usuario;
         }
 
         public async Task<List<string>>? ObtenerTurnoYGrupo(){
             List<string> usuario;
-            string url = "http://operaciones.papeleslatinos.com/neoapi/turno/ObtenerTurnoYGrupoActual";
+            string url = "http://neo.paveca.com.ve/neoapi/turno/ObtenerTurnoYGrupoActual";
             this.cliente = new HttpClient();
             usuario = await cliente.GetFromJsonAsync<List<string>>(url);
             return usuario;
+        }
+
+        public async Task<Dictionary<string,string>>? ObtenerProductosActuales(string centroCostoLinea){
+            Dictionary<string,string> producto;
+            string url = "http://neo.paveca.com.ve/NeoApi/OEE/obtenerProductosActualesDeLaLiena/" + centroCostoLinea;
+            this.cliente = new HttpClient();
+            producto = await cliente.GetFromJsonAsync<Dictionary<string,string>>(url);
+            return producto;
+        }
+
+        public async Task<Dictionary<string,string>> ObtenerProductosActualesConOrdenesAbiertas(string centroCostoLinea){
+            Dictionary<string,string> producto;
+            string url = "http://neo.paveca.com.ve/NeoApi/BPCS/obtenerProductoConOrdenDeFabricacionAbierta/" + centroCostoLinea;
+            this.cliente = new HttpClient();
+            producto = await cliente.GetFromJsonAsync<Dictionary<string,string>>(url);
+            return producto;
         }
 
         // public async Task<System.Net.Http.HttpResponseMessage> PostDiscrepancia(BdDiv1 bdDiv1)

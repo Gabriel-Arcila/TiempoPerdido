@@ -12,6 +12,7 @@ using Blazored.LocalStorage;
 using TiempoPerdido.Data;
 using TiempoPerdido.Service;
 using TiempoPerdido.Models;
+using TiempoPerdido.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +47,8 @@ builder.Services.AddDbContext<DbNeoContext>(options =>
 );
 
 builder.Services.AddScoped<global::Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider,global:: TiempoPerdido.Service.Autenticacion.CustomAuthStateProvider>();
+
+builder.Services.AddScoped<global::TiempoPerdido.Data.API.IDataAPI, global::TiempoPerdido.Data.API.DataAPI>();
 
 builder.Services.AddScoped<global::TiempoPerdido.Data.Global.IDataPais, global::TiempoPerdido.Data.Global.DataPais>();
 builder.Services.AddScoped<global::TiempoPerdido.Data.Global.IDataEmpresa, global::TiempoPerdido.Data.Global.DataEmpresa>();

@@ -1957,8 +1957,6 @@ public partial class DbNeoContext : DbContext
             entity.Property(e => e.IdTurnoTp)
                 .HasComment("identificador del turno")
                 .HasColumnName("IdTurnoTP");
-            entity.Property(e => e.IdLinea).HasComment("identificador de la linea");
-            entity.Property(e => e.IdOperador).HasComment("identificador del operador");
             entity.Property(e => e.Tcalidad)
                 .HasComment("calidad del turno")
                 .HasColumnName("TCalidad");
@@ -1976,6 +1974,11 @@ public partial class DbNeoContext : DbContext
             entity.Property(e => e.Toee)
                 .HasComment("OEE del turno")
                 .HasColumnName("TOEE");
+            entity.Property(e => e.ToperaFich)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasComment("identificador del operador")
+                .HasColumnName("TOperaFich");
             entity.Property(e => e.Tpbueno)
                 .HasComment("productos buenos del turno")
                 .HasColumnName("TPBueno");
@@ -1998,11 +2001,6 @@ public partial class DbNeoContext : DbContext
             entity.Property(e => e.Tvelocidad)
                 .HasComment("velocidad promedio del turno")
                 .HasColumnName("TVelocidad");
-
-            entity.HasOne(d => d.IdOperadorNavigation).WithMany(p => p.TurnoTps)
-                .HasForeignKey(d => d.IdOperador)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TurnoTP_Operador");
         });
 
         modelBuilder.Entity<Usuario>(entity =>

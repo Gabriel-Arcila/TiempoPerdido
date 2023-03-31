@@ -14,14 +14,9 @@ public partial class TurnoTp
     public int IdTurnoTp { get; set; }
 
     /// <summary>
-    /// identificador de la linea
-    /// </summary>
-    public int IdLinea { get; set; }
-
-    /// <summary>
     /// identificador del operador
     /// </summary>
-    public int IdOperador { get; set; }
+    public string ToperaFich { get; set; } = null!;
 
     /// <summary>
     /// turno en curso
@@ -31,7 +26,9 @@ public partial class TurnoTp
     /// <summary>
     /// fecha del turno
     /// </summary>
-    public DateTime? Tfecha { get; set; }
+    public DateTime Tfecha { get; set; }
+
+    public string? TcodiProdu { get; set; }
 
     /// <summary>
     /// tiempo trabajo del turno
@@ -77,10 +74,6 @@ public partial class TurnoTp
     /// OEE del turno
     /// </summary>
     public double? Toee { get; set; }
-
-    public string? TcodiProdu { get; set; }
-
-    public virtual Operador IdOperadorNavigation { get; set; } = null!;
 
     public virtual ICollection<ParsiOee> ParsiOees { get; } = new List<ParsiOee>();
 }

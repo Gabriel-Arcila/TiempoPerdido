@@ -39,6 +39,4 @@ public partial class Operador
     /// 0: Inactivo, 1:Activo		
     /// </summary>
     public bool Opestado { get; set; }
-
-    public virtual ICollection<TurnoTp> TurnoTps { get; } = new List<TurnoTp>();
 }

@@ -5,7 +5,7 @@ namespace  TiempoPerdido.Data
 {
     public interface IDataTieEjeTp
     { 
-        Task<List<TieEjeTp>> ObtenerParadas(int idLinea);
+        // Task<List<TieEjeTp>> ObtenerParadas(int idLinea);
     }
 
     public class DataTieEjeTp : IDataTieEjeTp
@@ -16,10 +16,10 @@ namespace  TiempoPerdido.Data
         {
             this._cotext = context;
         }
-        public async Task<List<TieEjeTp>> ObtenerParadas(int idLinea)
-        {
-            return await this._cotext.TieEjeTps.Include(t => t.IdParsiOeeNavigation).ThenInclude(o => o.IdTurnoTpNavigation).Where(t => t.IdParsiOeeNavigation.IdTurnoTpNavigation.IdLinea == idLinea && t.IdParsiOeeNavigation.IdTurnoTpNavigation.Tfecha >= DateTime.Now).ToListAsync();
-        }
+        // public async Task<List<TieEjeTp>> ObtenerParadas(int idLinea)
+        // {
+        //     return await this._cotext.TieEjeTps.Include(t => t.IdParsiOeeNavigation).ThenInclude(o => o.IdTurnoTpNavigation).Where(t => t.IdParsiOeeNavigation.IdTurnoTpNavigation.IdLinea == idLinea && t.IdParsiOeeNavigation.IdTurnoTpNavigation.Tfecha >= DateTime.Now).ToListAsync();
+        // }
     }
 
     public interface IDataOperador
@@ -56,23 +56,34 @@ namespace  TiempoPerdido.Data
         }
         public async Task<TurnoTp> TurnoActual(int idLinea)
         {
+            ParsiOee pasiOEE;
             string turno = "";
             DateTime fechaActual = DateTime.Now;
             if(fechaActual.Hour >= 6 && fechaActual.Hour < 18){
                 turno = "1";
-            }else if(fechaActual.Hour >= 18 && fechaActual.Hour <= 24){
+            }else{
                 turno = "2";
-            }else if(fechaActual.Hour >= 0 && fechaActual.Hour < 6){
-                turno = "2";
-                fechaActual = DateTime.Now.AddDays(-1);
             }
-            return await this._cotext.TurnoTps.Where(t => (t.Tfecha.Date == fechaActual.Date) && (t.Tturno == turno) && (t.IdLinea == idLinea) ).FirstOrDefaultAsync();
+            pasiOEE =  await this._cotext.ParsiOees.Include(t => t.IdTurnoTpNavigation).Include(t => t.IdAreaNavigation).Where(p => (p.IdTurnoTpNavigation.Tfecha.Date == fechaActual.Date) && (p.IdTurnoTpNavigation.Tturno == turno) && (p.IdAreaNavigation.IdLinea == idLinea)).FirstOrDefaultAsync();
+            return pasiOEE.IdTurnoTpNavigation;
         }
-         public async Task<bool> ActulizarTurno(TurnoTp turno)
+        public async Task<bool> ActulizarTurno(TurnoTp turno)
         {
             TurnoTp actulizacion = await this._cotext.TurnoTps.Where(t => t.IdTurnoTp == turno.IdTurnoTp).FirstOrDefaultAsync();
             if(actulizacion != null){
-                actulizacion.IdOperador = turno.IdOperador;
+                actulizacion.ToperaFich = turno.ToperaFich;
+                actulizacion.Tturno = turno.Tturno;
+                actulizacion.Tfecha = turno.Tfecha;
+                actulizacion.TcodiProdu = turno.TcodiProdu;
+                actulizacion.Ttrabajado = turno.Ttrabajado;
+                actulizacion.Tperdido = turno.Tperdido;
+                actulizacion.Tpbueno = turno.Tpbueno;
+                actulizacion.Tpmalo = turno.Tpmalo;
+                actulizacion.Tvelocidad = turno.Tvelocidad;
+                actulizacion.Trendi = turno.Trendi;
+                actulizacion.Tcalidad = turno.Tcalidad;
+                actulizacion.Tdispo = turno.Tdispo;
+                actulizacion.Toee = turno.Toee;
                 return await this._cotext.SaveChangesAsync() > 0;
             }
             return false;

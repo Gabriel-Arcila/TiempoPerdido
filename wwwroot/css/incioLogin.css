@@ -5,7 +5,7 @@
 
 #cajaPadre {
     width: 100%;
-    height: 70vh;
+    height: 78vh;
     /* background-color: brown; */
     display: flex;
     justify-content: center;
@@ -14,13 +14,23 @@
 }
 
 #cajalogo {
-    width: 50%;
-    height: 50%;
-    padding: 10%;
+    width: 60%;
+    /* height: 30%;
+    margin-top: 1%;
+    margin-bottom: 5%; */
     display: flex;
     justify-content: center;
     align-items:center;
     /* background-color:aqua; */
+}
+
+.cajaimghome{
+    width: 35%;
+    height: 35%;
+    margin-bottom: 1%;
+    display: flex;
+    justify-content: center;
+    align-items:flex-start;
 }
 
 .cajaContenido{
@@ -30,10 +40,30 @@
     align-items: center;
 }
 
+.cajaFormulario{
+    width: 100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.cajaFormulario div{
+    width: 100%;
+}
+
+.cajaFormulario div {
+    width: 100%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    padding-left: 30%;
+    padding-right: 25%;
+}
+
 #link_on{
     width: 100%;
     height: 100%;
-    padding: 20%;
+    padding: 10%;
     display: flex;
     flex-wrap:wrap;
     justify-content: center;
