@@ -48,8 +48,6 @@
                                 <BSInput InputType="InputType.Password" Required placeholder="Contraseña"
                                     @bind-Value="contrasena" />
                                 
-                                <BSInput InputType="InputType.Password" Required placeholder="ficha"
-                                    @bind-Value="ficha" />
                             <br>
                             <BSButton IsDisabled="@isDisabled" @onclick=login Class="w-100 btn btn-lg" Color="BSColor.Success" Size="Size.ExtraExtraLarge">login</BSButton>
                     </div>
@@ -63,11 +61,12 @@
 
 @code {
 
+    [CascadingParameter]
+    public TurnoTp turnoTp {get; set;}
     private string? mensaje { get; set;} = "Bienvenido";
     private bool isDisabled  { get; set;} = false;
     private string proyecto { get; set;} = "";
     private string usuario {get; set;} = "";
-    private string ficha {get; set;} = "";
     private string contrasena {get; set;} = "";
     public string CCProducto {get; set;}
     public int idLinea {get; set;}
@@ -81,15 +80,14 @@
     protected override async Task  OnInitializedAsync()
     {
         mensaje = "Ingrese la ficha";
-        proyecto = "LibroDeNovedades";
+        proyecto = "TiempoPerdido";
         userDto = new UserLoginDto() ;
     }
 
 
 
     protected async Task logout(){
-        await LocalStorage.RemoveItemAsync("TiempoPerdido");
-        await LocalStorage.RemoveItemAsync("ficha");
+        await LocalStorage.RemoveItemAsync(proyecto);
         await AuthStateProvider.GetAuthenticationStateAsync();
     }
 
@@ -97,8 +95,7 @@
     protected async Task login(){
         isDisabled = true;
         mensaje = "Cargando...";
-        int numCaracteres = ficha.Trim().Count();
-        if (usuario.Trim() != "" && contrasena.Trim() != "" && ficha.Trim() != "" && numCaracteres == 5)
+        if (usuario.Trim() != "" && contrasena.Trim() != "")
         {
             userDto.Proyecto = proyecto;
             userDto.UserName = usuario;
@@ -122,7 +119,6 @@
                 else
                 {
                     await LocalStorage.SetItemAsync("TiempoPerdido", validarToken);
-                    await LocalStorage.SetItemAsync("ficha", ficha);
                     await AuthStateProvider.GetAuthenticationStateAsync();    
                     NavigationManager.NavigateTo("");
                     mensaje = "Bienvenido";

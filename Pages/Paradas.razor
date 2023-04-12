@@ -1,12 +1,25 @@
 @page "/Paradas"
 
+<PageTitle>Tiempo Perdido</PageTitle>
+
+<BSContainer PaddingBottom="Padding.Large">
+    <BSRow>
+        <h1 class="titulo">NEO</h1>
+    </BSRow>
+</BSContainer>
 
 @code{
-    private int idLinea { get; set; }
+   // private int idLinea { get; set; }
     // usrOperadorSB
     // Rol OperadorSB
     // DIV 4 
     // encontar la linea
+    [CascadingParameter]
+    public TurnoTp turnoTp {get; set;}
 
+    protected override async Task  OnInitializedAsync()
+    {
+        int hi;
+    }
     
 }

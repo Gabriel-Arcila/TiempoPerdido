@@ -43,7 +43,7 @@ namespace  TiempoPerdido.Data
 
     public interface IDataTurnoTp
     { 
-        Task<TurnoTp> TurnoActual(int idLinea);
+        Task<TurnoTp?> TurnoActual(int idLinea);
         Task<bool> ActulizarTurno(TurnoTp turno);
     }
     public class DataTurnoTp : IDataTurnoTp
@@ -54,7 +54,7 @@ namespace  TiempoPerdido.Data
         {
             this._cotext = context;
         }
-        public async Task<TurnoTp> TurnoActual(int idLinea)
+        public async Task<TurnoTp?> TurnoActual(int idLinea)
         {
             ParsiOee pasiOEE;
             string turno = "";

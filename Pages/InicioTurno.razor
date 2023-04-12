@@ -15,53 +15,39 @@
 </BSContainer> *@
 
 <BSCard CardType="CardType.Card" MarginBottom="Margins.Large">
-    <BSAlert IsOpen="_showTooltip" style="height:55px;" class="alertaInfo">
-        <h5>@info</h5>
-    </BSAlert>
     <BSCard CardType="CardType.Body">
         <BSCard CardType="CardType.Text">
             <section id="cajaPadre">
-                <section class="cajaContenido">
-                    <section class="cajaimghome">
-                        <BSButton IsSubmit="true" IsDisabled="@isDisabled"  id="link_on">
-                            <BSImage Source="img/Neo.png" />
-                            <h1 id="ontext">Iniciar Turno</h1>
-                        </BSButton>
-                    </section>
-                </section>
-                @* <BSButton IsSubmit="true" IsDisabled="@isDisabled"  id="link_on">
-                    <section id="cajalogo">
-                        <BSImage id="logo" Source="img/Neo.png"/> 
-                        <h1 id="ontext">Iniciar Turno</h1>
-                    </section>
-                </BSButton> *@
                 <BSForm class="cajaContenido" Model="usuarioTurno" IsRow="true" Gutters="Gutters.Medium" OnSubmit="OK">
                     <DataAnnotationsValidator />
+                    <section class="cajaContenido">
+                        <section class="cajaimghome">
+                            <BSButton IsSubmit="true" IsDisabled="@isDisabled"  id="link_on">
+                                <BSImage Source="img/Neo.png" />
+                                <h1 id="ontext">Iniciar Turno</h1>
+                            </BSButton>
+                        </section>
+                    </section>
                     <section class="cajaFormulario">
-                        <BSCol Position="Position.Relative" Place ColumnMedium="4">
-                            <BSLabel class="labelFormulario">Linea</BSLabel>
-                            <BSInput InputType="InputType.Select"  rows="1" @onchange=BucarProducto @bind-Value="usuarioTurno.idLinea">
-                                <option value="0">Seleccione</option>
-                                @if(listaLinea != null){
-                                        @foreach (var item in listaLinea)
-                                        {
-                                            <option value="@item.IdLinea">@item.Lnom</option>
-                                        }
-                                }else{
-                                    <option value="0">Cargando...</option>
-                                }
-                            </BSInput> 
-                            <BSFeedback For="@(() => usuarioTurno.idLinea)"/> 
-                            
-                        </BSCol>
+                        <div class="juntoInput">
+                            <BSCol Position="Position.Relative" Place ColumnMedium="4">
+                                <BSLabel class="labelFormulario">Linea</BSLabel>
+                                <BSInput InputType="InputType.Select"  rows="1" @onchange=BucarProducto @bind-Value="usuarioTurno.idLinea">
+                                    <option value="0">Seleccione</option>
+                                    @if(listaLinea != null){
+                                            @foreach (var item in listaLinea)
+                                            {
+                                                <option value="@item.IdLinea">@item.Lnom</option>
+                                            }
+                                    }else{
+                                        <option value="0">Cargando...</option>
+                                    }
+                                </BSInput> 
+                                <BSFeedback For="@(() => usuarioTurno.idLinea)"/> 
+                                
+                            </BSCol>
 
-                        <BSCol Position="Position.Relative" Place ColumnMedium="4">
-                            <BSLabel class="labelFormulario">Ficha</BSLabel>
-                            <BSInput InputType="InputType.Text" rows="1"  @bind-Value="usuarioTurno.ficha"/>
-                            <BSFeedback For="@(() => usuarioTurno.ficha)"/> 
-                        </BSCol>
-
-                        <BSCol Position="Position.Relative" Place ColumnMedium="4">
+                            <BSCol Position="Position.Relative" Place ColumnMedium="4">
                             <BSLabel class="labelFormulario">Producto</BSLabel>
                             <BSInput InputType="InputType.Select" rows="1"  @bind-Value="usuarioTurno.productos">
                                 @if(listaDeProductos != null){
@@ -77,15 +63,15 @@
                             <BSFeedback For="@(() => usuarioTurno.productos)"/> 
                             
                         </BSCol>
+                        </div>
+
+                        <BSCol Position="Position.Relative" Place ColumnMedium="4">
+                            <BSLabel class="labelFormulario">Ficha</BSLabel>
+                            <BSInput InputType="InputType.Text" rows="1"  @bind-Value="usuarioTurno.ficha"/>
+                            <BSFeedback For="@(() => usuarioTurno.ficha)"/> 
+                        </BSCol>
                     </section>
-                    @* <section class="cajaContenido">
-                        <section class="cajaimghome">
-                            <BSButton IsSubmit="true" IsDisabled="@isDisabled"  id="link_on">
-                                <BSImage Source="img/Encendido.png" />
-                                <h1 id="ontext">Iniciar Turno</h1>
-                            </BSButton>
-                        </section>
-                    </section> *@
+                    
                 </BSForm>
             </section>
         </BSCard>
@@ -96,7 +82,10 @@
 
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
-    
+
+    [CascadingParameter]
+    public TurnoTp turnoTp {get; set;}
+
     private bool isDisabled { get; set; }
     private string info { get; set; }
     private int idDivision { get; set; }
@@ -106,8 +95,8 @@
     private List<Linea> listaLinea  { get; set; }
     private Dictionary<string, string> listaDeProductos {get; set;}
     private UsuarioTurno usuarioTurno {get; set;}
+    private bool isActulizacion { get; set; }
 
-    private TurnoTp turnoTp {get; set;}
     
     protected override async Task  OnInitializedAsync()
     {
@@ -134,7 +123,6 @@
             string centroCosto  = listaLinea.Where(l => l.IdLinea == usuarioTurno.idLinea).First().LcenCos ?? "0";
             listaDeProductos = await DataAPI.ObtenerProductosActualesConOrdenesAbiertas(centroCosto) ?? new Dictionary<string, string>() ;
         }
-        
     }
 
     protected async Task OK(EditContext e){
@@ -150,9 +138,16 @@
                 turnoTp.TcodiProdu = usuarioTurno.productos;
                 
                 if(turnoTp != null){
-                    await DataTurnoTp.ActulizarTurno(turnoTp);
+                    isActulizacion = await DataTurnoTp.ActulizarTurno(turnoTp);
+                    if(isActulizacion){
+                        turnoTp = await DataTurnoTp.TurnoActual(usuarioTurno.idLinea);
+                        Navigation.NavigateTo("Paradas");
+                    }else{
+                        info = "Error al actulizar el turno. Intente de nuevo.";
+                    }
+                }else{
+                    info = "Error al consultar el turno. Intente de nuevo.";
                 }
-                
             }else{
                 usuarioTurno.ficha = "";
                 info = "Ficha Invalida";
