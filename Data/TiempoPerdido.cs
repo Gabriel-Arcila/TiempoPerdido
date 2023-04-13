@@ -22,6 +22,25 @@ namespace  TiempoPerdido.Data
         // }
     }
 
+    public interface IDataTieParTp
+    { 
+        Task<List<TieParTp>> ObtenerParadas(int IdTurnoTp);
+    }
+
+    public class DataTieParTp : IDataTieParTp
+    {
+        private readonly DbNeoContext _cotext;
+
+        public DataTieParTp(DbNeoContext context)
+        {
+            this._cotext = context;
+        }
+        public async Task<List<TieParTp>> ObtenerParadas(int IdTurnoTp)
+        {
+            return await this._cotext.TieParTps.Where(t => t.IdParsiOeeNavigation.IdTurnoTp == IdTurnoTp).Include(t => t.IdAreAfectNavigation).Include(t => t.IdParaTpNavigation).Include(t => t.IdParsiOeeNavigation).ThenInclude(t => t.IdAreaNavigation).ToListAsync();
+        }
+    }
+
     public interface IDataOperador
     { 
         Task<Operador> BuscarOperador(string ficha);

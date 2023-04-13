@@ -23,10 +23,11 @@
                     </h5>
                     <BSButton Color="BSColor.Success" IsOutlined="true" @onclick="logout">Logout</BSButton>
                 </div>
-
-                <article class="content px-4">
-                    @Body
-                </article>
+                <CascadingValue Value="@turnoTp">
+                    <article class="content px-4">
+                        @Body
+                    </article>
+                </CascadingValue>
             </main>
         </Authorized> 
 
@@ -61,7 +62,6 @@
 
 @code {
 
-    [CascadingParameter]
     public TurnoTp turnoTp {get; set;}
     private string? mensaje { get; set;} = "Bienvenido";
     private bool isDisabled  { get; set;} = false;
@@ -82,6 +82,7 @@
         mensaje = "Ingrese la ficha";
         proyecto = "TiempoPerdido";
         userDto = new UserLoginDto() ;
+        turnoTp = new TurnoTp();
     }
 
 

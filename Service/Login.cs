@@ -28,4 +28,11 @@ namespace TiempoPerdido.Service
         //     Onchange?.Invoke();
         // }
     }
+    public class Turno{
+        public TurnoTp turnoTp;
+
+        public void setTurno(TurnoTp turnoTp){
+            this.turnoTp = turnoTp;
+        }
+    }
 }

@@ -5,6 +5,7 @@
 @inject IDataDivision DataDivision;
 @inject IDataLinea DataLinea;
 @inject IDataAPI DataAPI;
+@inject Turno turno;
 
 <PageTitle>Tiempo Perdido</PageTitle>
 
@@ -83,7 +84,7 @@
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
-    [CascadingParameter]
+    [CascadingParameter] 
     public TurnoTp turnoTp {get; set;}
 
     private bool isDisabled { get; set; }
@@ -141,6 +142,7 @@
                     isActulizacion = await DataTurnoTp.ActulizarTurno(turnoTp);
                     if(isActulizacion){
                         turnoTp = await DataTurnoTp.TurnoActual(usuarioTurno.idLinea);
+                        turno.turnoTp = turnoTp;
                         Navigation.NavigateTo("Paradas");
                     }else{
                         info = "Error al actulizar el turno. Intente de nuevo.";

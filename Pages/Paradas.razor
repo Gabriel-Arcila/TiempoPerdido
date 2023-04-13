@@ -1,4 +1,6 @@
 @page "/Paradas"
+@inject Turno turno;
+@inject IDataTieParTp DataTieParTp;
 
 <PageTitle>Tiempo Perdido</PageTitle>
 
@@ -9,17 +11,15 @@
 </BSContainer>
 
 @code{
-   // private int idLinea { get; set; }
-    // usrOperadorSB
-    // Rol OperadorSB
-    // DIV 4 
-    // encontar la linea
-    [CascadingParameter]
+    
     public TurnoTp turnoTp {get; set;}
+
+    public List<TieParTp> listaParadas {get; set;}
 
     protected override async Task  OnInitializedAsync()
     {
-        int hi;
+        turnoTp  = turno.turnoTp;
+        listaParadas = await DataTieParTp.ObtenerParadas(turnoTp.IdTurnoTp);
     }
     
 }

@@ -40,7 +40,7 @@ builder.Services.AddBlazoredSessionStorage(config =>
 
 builder.Services.AddBlazoredSessionStorage();
 
-//builder.Services.AddSingleton<UsuarioServices>();
+builder.Services.AddSingleton<Turno>();
 
 builder.Services.AddDbContext<DbNeoContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionDbNeo")),ServiceLifetime.Transient
@@ -61,6 +61,8 @@ builder.Services.AddScoped<global::TiempoPerdido.Data.Global.IDataEquipoEAM, glo
 builder.Services.AddScoped<global::TiempoPerdido.Data.IDataOperador, global::TiempoPerdido.Data.DataOperador>();
 builder.Services.AddScoped<global::TiempoPerdido.Data.IDataTieEjeTp, global::TiempoPerdido.Data.DataTieEjeTp>();
 builder.Services.AddScoped<global::TiempoPerdido.Data.IDataTurnoTp, global::TiempoPerdido.Data.DataTurnoTp>();
+builder.Services.AddScoped<global::TiempoPerdido.Data.IDataTieParTp, global::TiempoPerdido.Data.DataTieParTp>();
+// builder.Service.AddSingleton.
 
 
 var app = builder.Build();
