@@ -1,4 +1,8 @@
 @page "/Paradas"
+
+@using Microsoft.EntityFrameworkCore
+@using System.Linq
+
 @inject Turno turno;
 @inject IDataTieParTp DataTieParTp;
 
@@ -10,16 +14,75 @@
     </BSRow>
 </BSContainer>
 
+<div class="table">
+    <RadzenDataGrid @ref="ordersGrid" AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="5" AllowSorting="true" 
+                Data="@orders" TItem="TieParTp" >
+        <Columns>
+            <RadzenDataGridColumn   Width="40px" TItem="TieParTp" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                <Template Context="data">
+                    <RadzenText class="mb-0 tipografia">@(orders.IndexOf(data) + 1)</RadzenText>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Width="180px" TItem="TieParTp" Property="IdParsiOeeNavigation.IdAreaNavigation.IdAreaNavigation.Anom" Title="Area Detenida">
+                <Template Context="order">
+                    <RadzenText class="mb-0 tipografia">@order.IdParsiOeeNavigation.IdAreaNavigation.IdAreaNavigation.Anom - @order.IdParsiOeeNavigation.IdAreaNavigation.Lacodigo</RadzenText>
+                </Template>
+            </RadzenDataGridColumn>
+            @* <RadzenDataGridColumn Width="190px" TItem="TieParTp" Property="IdParaTpNavigation.IdTiParTpNavigation.Tpnombre" Title="Tipo de Parada">
+                <Template Context="order ">
+                    <RadzenText class="mb-0 tipografia">@order.IdParaTpNavigation.IdTiParTpNavigation.Tpnombre</RadzenText>
+                </Template>
+            </RadzenDataGridColumn> *@
+            <RadzenDataGridColumn TItem="TieParTp" Property="IdParaTpNavigation.Pnombre" Title="Paradas">
+                <Template Context="order">
+                    <RadzenText class="mb-0 tipografia">@order.IdParaTpNavigation.Pnombre</RadzenText>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Width="100px" TItem="TieParTp" Property="Tefechai" Title="Inicio">
+                <Template Context="order">
+                    <RadzenText class="mb-0 tipografia">@order.Tefechai.ToString("HH:mm:ss")</RadzenText>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Width="100px"  TItem="TieParTp" Property="Tefechaf" Title="Final">
+                <Template Context="order">
+                    <RadzenText class="mb-0 tipografia">@order.Tefechaf?.ToString("HH:mm:ss")</RadzenText>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Width="100px" TItem="TieParTp" Property="Teduracion" Title="Duracion">
+                <Template Context="order">
+                    <RadzenText class="mb-0 tipografia">@Math.Round(order.Teduracion ?? 0) min</RadzenText>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn  TItem="TieParTp" Property="IdAreAfectNavigation.Aanom" Title="Area Afectada">
+                <Template Context="order">
+                    <RadzenText class="mb-0 tipografia">@order.IdAreAfectNavigation.Aanom</RadzenText>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Width="100px" TItem="TieParTp" Property="OrderID" Title="Editar">
+                <Template Context="order">
+                    <RadzenButton Variant="Variant.Outlined" Shade="Shade.Darker"  Text="Editar" ButtonStyle="ButtonStyle.Success" />
+                    @* Click=@(args => OnClick("Success button ")) *@
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</div>
+
 @code{
+
+    public RadzenDataGrid<TieParTp> ordersGrid {get; set;}
+    public IList<TieParTp> orders {get; set;}
+
+    public string fechaFin {get; set;}
     
     public TurnoTp turnoTp {get; set;}
 
     public List<TieParTp> listaParadas {get; set;}
 
-    protected override async Task  OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         turnoTp  = turno.turnoTp;
-        listaParadas = await DataTieParTp.ObtenerParadas(turnoTp.IdTurnoTp);
+        orders = await DataTieParTp.ObtenerParadas(turnoTp.IdTurnoTp);
     }
     
 }

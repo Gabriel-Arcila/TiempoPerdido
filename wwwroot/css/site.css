@@ -4,6 +4,10 @@ html, body {
     font-family: 'century gothic' !important;
 }
 
+main{
+    background-color: white;
+}
+
 .itemlink{
     color: black !important;
 

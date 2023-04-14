@@ -37,7 +37,7 @@ namespace  TiempoPerdido.Data
         }
         public async Task<List<TieParTp>> ObtenerParadas(int IdTurnoTp)
         {
-            return await this._cotext.TieParTps.Where(t => t.IdParsiOeeNavigation.IdTurnoTp == IdTurnoTp).Include(t => t.IdAreAfectNavigation).Include(t => t.IdParaTpNavigation).Include(t => t.IdParsiOeeNavigation).ThenInclude(t => t.IdAreaNavigation).ToListAsync();
+            return await this._cotext.TieParTps.Where(t => t.IdParsiOeeNavigation.IdTurnoTp == IdTurnoTp).Include(t => t.IdAreAfectNavigation).Include(t => t.IdParaTpNavigation).ThenInclude(p => p.IdTiParTpNavigation).Include(t => t.IdParsiOeeNavigation).ThenInclude(P => P.IdAreaNavigation).ThenInclude(a => a.IdAreaNavigation).ToListAsync();
         }
     }
 
