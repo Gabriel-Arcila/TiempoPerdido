@@ -4,6 +4,7 @@
 @using System.Linq
 
 @inject Turno turno;
+@inject NavigationManager Navigation
 @inject IDataTieParTp DataTieParTp;
 
 <PageTitle>Tiempo Perdido</PageTitle>
@@ -60,7 +61,7 @@
             </RadzenDataGridColumn>
             <RadzenDataGridColumn Width="100px" TItem="TieParTp" Property="OrderID" Title="Editar">
                 <Template Context="order">
-                    <RadzenButton Variant="Variant.Outlined" Shade="Shade.Darker"  Text="Editar" ButtonStyle="ButtonStyle.Success" />
+                    <RadzenButton Variant="Variant.Outlined" Shade="Shade.Darker"  Text="Editar" ButtonStyle="ButtonStyle.Success"   Click=@(args => EditParada(order.IdTieParTp)) />
                     @* Click=@(args => OnClick("Success button ")) *@
                 </Template>
             </RadzenDataGridColumn>
@@ -79,10 +80,17 @@
 
     public List<TieParTp> listaParadas {get; set;}
 
+    public int IdTieParTp {get; set;}
+
     protected override async Task OnInitializedAsync()
     {
         turnoTp  = turno.turnoTp;
         orders = await DataTieParTp.ObtenerParadas(turnoTp.IdTurnoTp);
+    }
+
+    protected  async Task EditParada(int IdTieParTp)
+    {
+        Navigation.NavigateTo($"datelle/{IdTieParTp}");
     }
     
 }
