@@ -6,6 +6,9 @@
 @inject Turno turno;
 @inject NavigationManager Navigation
 @inject IDataTieParTp DataTieParTp;
+@inject IDataAreAfect DataAreAfect;
+
+@inject NotificationService NotificationService
 
 <PageTitle>Tiempo Perdido</PageTitle>
 
@@ -14,6 +17,17 @@
         <h1 class="titulo">NEO</h1>
     </BSRow>
 </BSContainer>
+
+
+<br>
+<br>
+
+@if(cambio){
+     <div class="rz-p-sm-12 rz-text-align-center">
+        <RadzenDropDown AllowClear="true" @bind-Value=datoCambio AllowVirtualization="true" AllowFiltering="true" Data=@listaAreaAfectada TextProperty="Aanom" ValueProperty="IdAreAfect" Style="width: 100%; max-width: 400px;" />
+        <RadzenButton Variant="Variant.Flat" Click=@(args => Listo()) Text="Registrar" ButtonStyle="ButtonStyle.Success"/>
+    </div>
+}
 
 
 
@@ -62,7 +76,7 @@
                 </Template>
             </RadzenDataGridColumn>
             <RadzenDataGridColumn Width="100px" TItem="TieParTp" Property="OrderID" Title="Editar">
-                <Template Context="order">
+                <Template Context="order"> 
                     <RadzenButton Variant="Variant.Outlined" Shade="Shade.Darker"  Text="Editar" ButtonStyle="ButtonStyle.Success"   Click=@(args => EditParada(order.IdTieParTp)) />
                     @* Click=@(args => OnClick("Success button ")) *@
                 </Template>
@@ -75,25 +89,60 @@
 
     public RadzenDataGrid<TieParTp> ordersGrid {get; set;}
     public IList<TieParTp> orders {get; set;}
-
-    public string fechaFin {get; set;}
-    
+    public List<AreAfect> listaAreaAfectada {get; set;}
     public TurnoTp turnoTp {get; set;}
-
-    public List<TieParTp> listaParadas {get; set;}
-
+    public string estado {get; set;}
+    public bool cambio {get; set;}
+    public bool exito {get; set;}
+    public int datoCambio {get; set;}
     public int idTieParTp {get; set;}
 
     protected override async Task OnInitializedAsync()
     {
+        cambio = false;
+        datoCambio = 0;
+
         idTieParTp = 0;
         turnoTp  = turno.turnoTp;
         orders = await DataTieParTp.ObtenerParadas(turnoTp.IdTurnoTp);
+        listaAreaAfectada = await DataAreAfect.ObtenerTodasLasAreasAfectada();
     }
 
-    protected  async Task EditParada(int IdTieParTp)
+    protected async Task EditParada(int IdTieParTp)
     {
         idTieParTp = IdTieParTp;
+        cambio = true;
     }
-    
+    protected async Task Listo()
+    {
+        if(datoCambio != 0){
+            exito = await DataTieParTp.CambiarMotivoParada(idTieParTp,datoCambio);
+            if(exito){
+                Notificacion("exito","Guardado exitoso.","");
+                datoCambio = 0;
+                cambio = false;
+            }else{
+                Notificacion("error","Hubo un error. Intente de nuevo.","");
+            }
+        }else{
+            datoCambio = 0;
+            cambio = false;
+        }
+    }
+
+    public void Notificacion(string tipo,string mensaje,string detalle)
+    {
+
+        NotificationMessage notificacion = new NotificationMessage{};
+        if(tipo == "error"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Error, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }else if(tipo == "info"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Info, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }else if(tipo == "exito"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Success, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }else if(tipo == "advertencia"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }
+        NotificationService.Notify(notificacion);
+    } 
 }

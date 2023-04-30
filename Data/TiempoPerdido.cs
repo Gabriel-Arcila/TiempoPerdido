@@ -25,6 +25,10 @@ namespace  TiempoPerdido.Data
     public interface IDataTieParTp
     { 
         Task<List<TieParTp>> ObtenerParadas(int IdTurnoTp);
+
+        Task<TieParTp?> ObtenerParadaPorId(int idTieParTp);
+
+        Task<bool> CambiarMotivoParada(int idTieParTp, int idAreaAfectada);
     }
 
     public class DataTieParTp : IDataTieParTp
@@ -35,9 +39,22 @@ namespace  TiempoPerdido.Data
         {
             this._cotext = context;
         }
+        public async Task<TieParTp?> ObtenerParadaPorId(int idTieParTp)
+        {
+            return await this._cotext.TieParTps.Where(t => t.IdTieParTp == idTieParTp).FirstOrDefaultAsync();
+        }
         public async Task<List<TieParTp>> ObtenerParadas(int IdTurnoTp)
         {
             return await this._cotext.TieParTps.Where(t => t.IdParsiOeeNavigation.IdTurnoTp == IdTurnoTp).Include(t => t.IdAreAfectNavigation).Include(t => t.IdParaTpNavigation).ThenInclude(p => p.IdTiParTpNavigation).Include(t => t.IdParsiOeeNavigation).ThenInclude(P => P.IdAreaNavigation).ThenInclude(a => a.IdAreaNavigation).ToListAsync();
+        }
+        public async Task<bool> CambiarMotivoParada(int idTieParTp, int idAreaAfectada)
+        {
+            TieParTp? pararada = await this._cotext.TieParTps.Where(t => t.IdTieParTp == idTieParTp).FirstOrDefaultAsync();
+            if(pararada != null){
+                pararada.IdAreAfect = idAreaAfectada;
+                return await this._cotext.SaveChangesAsync() > 0;
+            }
+            return false;
         }
     }
 
@@ -106,6 +123,23 @@ namespace  TiempoPerdido.Data
                 return await this._cotext.SaveChangesAsync() > 0;
             }
             return false;
+        }
+    }
+
+    public interface IDataAreAfect
+    { 
+        Task<List<AreAfect>> ObtenerTodasLasAreasAfectada();
+    }
+    public class DataAreAfect : IDataAreAfect
+    {
+        private readonly DbNeoContext _cotext;
+
+        public DataAreAfect(DbNeoContext context)
+        {
+            this._cotext = context;
+        }
+        public async Task<List<AreAfect>> ObtenerTodasLasAreasAfectada(){
+            return await this._cotext.AreAfects.ToListAsync();
         }
     }
 }

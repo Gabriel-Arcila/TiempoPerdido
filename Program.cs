@@ -63,6 +63,7 @@ builder.Services.AddScoped<global::TiempoPerdido.Data.IDataOperador, global::Tie
 builder.Services.AddScoped<global::TiempoPerdido.Data.IDataTieEjeTp, global::TiempoPerdido.Data.DataTieEjeTp>();
 builder.Services.AddScoped<global::TiempoPerdido.Data.IDataTurnoTp, global::TiempoPerdido.Data.DataTurnoTp>();
 builder.Services.AddScoped<global::TiempoPerdido.Data.IDataTieParTp, global::TiempoPerdido.Data.DataTieParTp>();
+builder.Services.AddScoped<global::TiempoPerdido.Data.IDataAreAfect, global::TiempoPerdido.Data.DataAreAfect>();
 // builder.Service.AddSingleton.
 
 
