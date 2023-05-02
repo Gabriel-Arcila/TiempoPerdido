@@ -102,17 +102,21 @@
     {
         usuarioTurno = new UsuarioTurno();
         operador = new Operador();
-        isDisabled = false;
-        info = "Inicie Turno";
-        if (authenticationState is not null)
-        {
-            AuthenticationState? authState = await authenticationState;
-            ClaimsPrincipal? user = authState?.User;
-            if (user?.Identity is not null && user.Identity.IsAuthenticated)
+        if(turno.turnoTp == null){
+            isDisabled = false;
+            info = "Inicie Turno";
+            if (authenticationState is not null)
             {
-                idDivision = int.Parse(user.FindFirst(c => c.Type == "IdDivision")?.Value ?? "0") ;
-                listaLinea = await DataLinea.ObtenerLasLineasPorDivision(idDivision);
+                AuthenticationState? authState = await authenticationState;
+                ClaimsPrincipal? user = authState?.User;
+                if (user?.Identity is not null && user.Identity.IsAuthenticated)
+                {
+                    idDivision = int.Parse(user.FindFirst(c => c.Type == "IdDivision")?.Value ?? "0") ;
+                    listaLinea = await DataLinea.ObtenerLasLineasPorDivision(idDivision);
+                }
             }
+        }else{
+            Navigation.NavigateTo("Paradas");
         }
     }
 

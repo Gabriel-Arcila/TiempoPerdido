@@ -28,7 +28,7 @@ namespace  TiempoPerdido.Data
 
         Task<TieParTp?> ObtenerParadaPorId(int idTieParTp);
 
-        Task<bool> CambiarMotivoParada(int idTieParTp, int idAreaAfectada);
+        Task<bool> CambiarMotivoParada(int idTieParTp, int idAreaAfectada,int idParadaTp);
     }
 
     public class DataTieParTp : IDataTieParTp
@@ -47,11 +47,12 @@ namespace  TiempoPerdido.Data
         {
             return await this._cotext.TieParTps.Where(t => t.IdParsiOeeNavigation.IdTurnoTp == IdTurnoTp).Include(t => t.IdAreAfectNavigation).Include(t => t.IdParaTpNavigation).ThenInclude(p => p.IdTiParTpNavigation).Include(t => t.IdParsiOeeNavigation).ThenInclude(P => P.IdAreaNavigation).ThenInclude(a => a.IdAreaNavigation).ToListAsync();
         }
-        public async Task<bool> CambiarMotivoParada(int idTieParTp, int idAreaAfectada)
+        public async Task<bool> CambiarMotivoParada(int idTieParTp, int idAreaAfectada,int idParadaTp)
         {
             TieParTp? pararada = await this._cotext.TieParTps.Where(t => t.IdTieParTp == idTieParTp).FirstOrDefaultAsync();
             if(pararada != null){
                 pararada.IdAreAfect = idAreaAfectada;
+                pararada.IdParaTp = idParadaTp;
                 return await this._cotext.SaveChangesAsync() > 0;
             }
             return false;
@@ -140,6 +141,42 @@ namespace  TiempoPerdido.Data
         }
         public async Task<List<AreAfect>> ObtenerTodasLasAreasAfectada(){
             return await this._cotext.AreAfects.ToListAsync();
+        }
+    }
+
+    public interface IDataTiParTP
+    { 
+        Task<List<TiParTp>> ObtenerTiposDeParada();
+    }
+    public class DataTiParTP : IDataTiParTP
+    {
+        private readonly DbNeoContext _cotext;
+
+        public DataTiParTP(DbNeoContext context)
+        {
+            this._cotext = context;
+        }
+
+        public async Task<List<TiParTp>> ObtenerTiposDeParada(){
+            return await this._cotext.TiParTps.ToListAsync();
+        }
+    }
+
+    public interface IDataParaTp
+    { 
+        Task<List<ParaTp>> ObtenerLasParadasPorTipoParada(int idTiParTps);
+    }
+    public class DataParaTp : IDataParaTp
+    {
+        private readonly DbNeoContext _cotext;
+
+        public DataParaTp(DbNeoContext context)
+        {
+            this._cotext = context;
+        }
+
+        public async Task<List<ParaTp>> ObtenerLasParadasPorTipoParada(int idTiParTp){
+            return await this._cotext.ParaTps.Where(t => t.IdTiParTp == idTiParTp).ToListAsync();
         }
     }
 }

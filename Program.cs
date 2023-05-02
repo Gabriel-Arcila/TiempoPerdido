@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using BlazorStrap;
 using Blazored.SessionStorage;
 using Blazored.LocalStorage;
+using Radzen;
 
 using TiempoPerdido.Data;
 using TiempoPerdido.Service;
@@ -27,6 +28,8 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddControllersWithViews();
 builder.Services.AddOptions();  
 builder.Services.AddAuthorizationCore();
+
+builder.Services.AddScoped<NotificationService>();
 
 builder.Services.AddBlazoredSessionStorage(config =>
 {
@@ -64,6 +67,11 @@ builder.Services.AddScoped<global::TiempoPerdido.Data.IDataTieEjeTp, global::Tie
 builder.Services.AddScoped<global::TiempoPerdido.Data.IDataTurnoTp, global::TiempoPerdido.Data.DataTurnoTp>();
 builder.Services.AddScoped<global::TiempoPerdido.Data.IDataTieParTp, global::TiempoPerdido.Data.DataTieParTp>();
 builder.Services.AddScoped<global::TiempoPerdido.Data.IDataAreAfect, global::TiempoPerdido.Data.DataAreAfect>();
+builder.Services.AddScoped<global::TiempoPerdido.Data.IDataParaTp, global::TiempoPerdido.Data.DataParaTp>();
+builder.Services.AddScoped<global::TiempoPerdido.Data.IDataTiParTP, global::TiempoPerdido.Data.DataTiParTP>();
+
+
+
 // builder.Service.AddSingleton.
 
 

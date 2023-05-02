@@ -8,7 +8,10 @@
 @inject IDataTieParTp DataTieParTp;
 @inject IDataAreAfect DataAreAfect;
 
-@inject NotificationService NotificationService
+@inject IDataParaTp DataParaTp;
+@inject IDataTiParTP DataTiParTP;
+
+@inject NotificationService notificationService
 
 <PageTitle>Tiempo Perdido</PageTitle>
 
@@ -23,10 +26,33 @@
 <br>
 
 @if(cambio){
-     <div class="rz-p-sm-12 rz-text-align-center">
-        <RadzenDropDown AllowClear="true" @bind-Value=datoCambio AllowVirtualization="true" AllowFiltering="true" Data=@listaAreaAfectada TextProperty="Aanom" ValueProperty="IdAreAfect" Style="width: 100%; max-width: 400px;" />
-        <RadzenButton Variant="Variant.Flat" Click=@(args => Listo()) Text="Registrar" ButtonStyle="ButtonStyle.Success"/>
-    </div>
+    <RadzenStack Orientation="Orientation.Vertical" Gap="1rem" Class="rz-mb-6 rz-border-radius-1" Style="border: var(--rz-grid-cell-border);">
+        <div class="rz-p-sm-12 rz-text-align-center">
+            
+                <RadzenRow Gap="2rem" Class="rz-p-0 rz-p-lg-4">
+                    <RadzenColumn Size="12" SizeMD="6">
+                        <RadzenFormField style="width: 80%;" Size="12" SizeMD="12" Text="Tipo de parada">
+                            <RadzenDropDown Change="BuscarParadas" AllowClear="true" @bind-Value=idTiParTp AllowVirtualization="true" AllowFiltering="true" Data=@listaTipoParadas TextProperty="Tpnombre" ValueProperty="IdTiParTp" Style="width: 100%; max-width: 400px;" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="6">
+                        <RadzenFormField style="width: 80%;" Size="12" SizeMD="12" Text="Parada">
+                            <RadzenDropDown AllowClear="true" @bind-Value=idParada AllowVirtualization="true" AllowFiltering="true" Data=@listaParadas TextProperty="Pnombre" ValueProperty="IdParaTp" Style="width: 100%; max-width: 400px;" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow Gap="2rem" Class="rz-p-0 rz-p-lg-4">
+                    <RadzenColumn Size="8" SizeMD="12">
+                        <RadzenFormField style="width: 40%;" Size="12" SizeMD="12" Text="Area afectada">
+                            <RadzenDropDown AllowClear="true" @bind-Value=idAreaAfectada AllowVirtualization="true" AllowFiltering="true" Data=@listaAreaAfectada TextProperty="Aanom" ValueProperty="IdAreAfect" Style="width: 100%; max-width: 400px;" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn Size="4" SizeMD="12">
+                        <RadzenButton class="buttonFormularioOK" Variant="Variant.Flat" Click=@(args => Listo()) Text="Registrar" ButtonStyle="ButtonStyle.Success"/>
+                    </RadzenColumn>
+                </RadzenRow>
+        </div>
+    </RadzenStack>
 }
 
 
@@ -45,11 +71,6 @@
                     <RadzenText class="mb-0 tipografia">@order.IdParsiOeeNavigation.IdAreaNavigation.IdAreaNavigation.Anom - @order.IdParsiOeeNavigation.IdAreaNavigation.Lacodigo</RadzenText>
                 </Template>
             </RadzenDataGridColumn>
-            @* <RadzenDataGridColumn Width="190px" TItem="TieParTp" Property="IdParaTpNavigation.IdTiParTpNavigation.Tpnombre" Title="Tipo de Parada">
-                <Template Context="order ">
-                    <RadzenText class="mb-0 tipografia">@order.IdParaTpNavigation.IdTiParTpNavigation.Tpnombre</RadzenText>
-                </Template>
-            </RadzenDataGridColumn> *@
             <RadzenDataGridColumn TItem="TieParTp" Property="IdParaTpNavigation.Pnombre" Title="Paradas">
                 <Template Context="order">
                     <RadzenText class="mb-0 tipografia">@order.IdParaTpNavigation.Pnombre</RadzenText>
@@ -78,7 +99,6 @@
             <RadzenDataGridColumn Width="100px" TItem="TieParTp" Property="OrderID" Title="Editar">
                 <Template Context="order"> 
                     <RadzenButton Variant="Variant.Outlined" Shade="Shade.Darker"  Text="Editar" ButtonStyle="ButtonStyle.Success"   Click=@(args => EditParada(order.IdTieParTp)) />
-                    @* Click=@(args => OnClick("Success button ")) *@
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
@@ -90,42 +110,59 @@
     public RadzenDataGrid<TieParTp> ordersGrid {get; set;}
     public IList<TieParTp> orders {get; set;}
     public List<AreAfect> listaAreaAfectada {get; set;}
+    public List<TiParTp> listaTipoParadas {get; set;}
+    public List<ParaTp> listaParadas {get; set;}
     public TurnoTp turnoTp {get; set;}
     public string estado {get; set;}
     public bool cambio {get; set;}
     public bool exito {get; set;}
-    public int datoCambio {get; set;}
+    public int idAreaAfectada {get; set;}
+    public int idParada {get; set;}
     public int idTieParTp {get; set;}
-
+    public int idTiParTp {get; set;}
     protected override async Task OnInitializedAsync()
     {
-        cambio = false;
-        datoCambio = 0;
+        if(turno.turnoTp == null){
+            Navigation.NavigateTo("");
+        }else{
+            cambio = false;
+            idAreaAfectada = 0;
 
-        idTieParTp = 0;
-        turnoTp  = turno.turnoTp;
-        orders = await DataTieParTp.ObtenerParadas(turnoTp.IdTurnoTp);
-        listaAreaAfectada = await DataAreAfect.ObtenerTodasLasAreasAfectada();
+            idTieParTp = 0;
+            turnoTp  = turno.turnoTp;
+            orders = await DataTieParTp.ObtenerParadas(turnoTp.IdTurnoTp);
+            listaTipoParadas = await DataTiParTP.ObtenerTiposDeParada();
+            listaAreaAfectada = await DataAreAfect.ObtenerTodasLasAreasAfectada();
+        }
+        
     }
 
-    protected async Task EditParada(int IdTieParTp)
+    protected void EditParada(int IdTieParTp)
     {
         idTieParTp = IdTieParTp;
         cambio = true;
     }
+    public async Task BuscarParadas(){
+        listaParadas = await DataParaTp.ObtenerLasParadasPorTipoParada(idTiParTp);
+    }
     protected async Task Listo()
     {
-        if(datoCambio != 0){
-            exito = await DataTieParTp.CambiarMotivoParada(idTieParTp,datoCambio);
+        if(idAreaAfectada != 0){
+            exito = await DataTieParTp.CambiarMotivoParada(idTieParTp,idAreaAfectada,idParada);
             if(exito){
-                Notificacion("exito","Guardado exitoso.","");
-                datoCambio = 0;
+                orders = await DataTieParTp.ObtenerParadas(turnoTp.IdTurnoTp);
+                Notificacion("exito","Guardado exitosamente.","");
+                idAreaAfectada = 0;
+                idTiParTp = 0;
+                idParada = 0;
                 cambio = false;
             }else{
                 Notificacion("error","Hubo un error. Intente de nuevo.","");
             }
         }else{
-            datoCambio = 0;
+            idAreaAfectada = 0;
+            idTiParTp = 0;
+            idParada = 0;
             cambio = false;
         }
     }
@@ -133,16 +170,19 @@
     public void Notificacion(string tipo,string mensaje,string detalle)
     {
 
-        NotificationMessage notificacion = new NotificationMessage{};
+        NotificationMessage notificacion;
         if(tipo == "error"){
             notificacion = new NotificationMessage { Severity = NotificationSeverity.Error, Summary = mensaje, Detail = detalle, Duration = 8000 };
+            notificationService.Notify(notificacion);
         }else if(tipo == "info"){
             notificacion = new NotificationMessage { Severity = NotificationSeverity.Info, Summary = mensaje, Detail = detalle, Duration = 8000 };
+            notificationService.Notify(notificacion);
         }else if(tipo == "exito"){
             notificacion = new NotificationMessage { Severity = NotificationSeverity.Success, Summary = mensaje, Detail = detalle, Duration = 8000 };
+            notificationService.Notify(notificacion);
         }else if(tipo == "advertencia"){
             notificacion = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = mensaje, Detail = detalle, Duration = 8000 };
+            notificationService.Notify(notificacion);
         }
-        NotificationService.Notify(notificacion);
     } 
 }

@@ -56,6 +56,13 @@ a, .btn-link {
     color: red;
 }
 
+.rz-grid-filter-buttons button{
+    background-color:rgba(0, 120, 83, 1) !important;
+}
+.rz-grid-filter-buttons button span{
+    color: white !important;
+}
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;

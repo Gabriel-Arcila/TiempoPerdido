@@ -5,6 +5,7 @@
 
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
+@inject Turno turno;
 
 <PageTitle>Tiempo Perdido</PageTitle>
 
@@ -21,7 +22,9 @@
                 <div class="top-row px-4 cabeza">
                     <h5 style="text-align: start;">
                     </h5>
-                    <BSButton Color="BSColor.Success" IsOutlined="true" @onclick="logout">Logout</BSButton>
+                    @if(turno.turnoTp != null){
+                        <BSButton Color="BSColor.Success" IsOutlined="true" @onclick="logout">Cerrar Turno</BSButton>
+                    }
                 </div>
                 <CascadingValue Value="@turnoTp">
                     <article class="content px-4">
@@ -29,6 +32,8 @@
                     </article>
                 </CascadingValue>
             </main>
+
+            <RadzenNotification />
         </Authorized> 
 
         <NotAuthorized>
@@ -88,8 +93,10 @@
 
 
     protected async Task logout(){
-        await LocalStorage.RemoveItemAsync(proyecto);
+        //await LocalStorage.RemoveItemAsync(proyecto);
+        turno.turnoTp = null;
         await AuthStateProvider.GetAuthenticationStateAsync();
+        NavigationManager.NavigateTo("");
     }
 
 

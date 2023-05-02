@@ -26,8 +26,12 @@
 }
 
 .buttonFormularioOK{
-    background-color: #3cad49;
-    color: white;
+    background-color: #3cad49 !important;
+    color: white !important;
+}
+
+.buttonFormularioOK span{
+    color: white !important;
 }
 .buttonFormularioDLT{
     background-color: tomato;
