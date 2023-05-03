@@ -16,9 +16,11 @@
 <PageTitle>Tiempo Perdido</PageTitle>
 
 <BSContainer PaddingBottom="Padding.Large">
-    <BSRow>
-        <h1 class="titulo">NEO</h1>
-    </BSRow>
+    <RadzenRow Gap="2rem" Class="rz-p-0 rz-p-lg-0 rz-m-lg-0">
+        <RadzenColumn  Size="6" SizeMD="6">
+            <RadzenButton  Click=@(args => recargar()) Text="Recargar" Icon="refresh" ButtonStyle="ButtonStyle.Light" />
+        </RadzenColumn>
+    </RadzenRow>
 </BSContainer>
 
 
@@ -135,6 +137,11 @@
             listaAreaAfectada = await DataAreAfect.ObtenerTodasLasAreasAfectada();
         }
         
+    }
+
+    public async Task recargar()
+    {
+        orders = await DataTieParTp.ObtenerParadas(turnoTp.IdTurnoTp);
     }
 
     protected void EditParada(int IdTieParTp)

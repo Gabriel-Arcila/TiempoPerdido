@@ -60,7 +60,6 @@
                 </div>              
             </main>
         </NotAuthorized>
-
     </AuthorizeView> 
 
 </div>
@@ -75,13 +74,9 @@
     private string contrasena {get; set;} = "";
     public string CCProducto {get; set;}
     public int idLinea {get; set;}
-
     private UserLoginDto userDto {get; set;}
-
     private HttpResponseMessage result {get; set;}
-
     private string validarToken  {get; set;}
-    
     protected override async Task  OnInitializedAsync()
     {
         mensaje = "Ingrese la ficha";
